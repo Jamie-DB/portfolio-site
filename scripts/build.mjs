@@ -271,4 +271,8 @@ async function main() {
   console.log(`built ${path.relative(ROOT, OUT)}/`);
 }
 
+// A closed stdout (for example `npm run build | head`) must not kill a build
+// halfway through writing dist/.
+process.stdout.on('error', (e) => { if (e.code !== 'EPIPE') throw e; });
+
 main().catch((e) => { console.error(e.message || e); process.exit(1); });
