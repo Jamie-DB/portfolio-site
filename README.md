@@ -20,6 +20,7 @@ What I decided or corrected:
 - The CV page renders from my master document rather than from the one-page CV, at my direction. I ruled out the non-engineering roles.
 - I confirmed the containment paragraph on the audit page as my actual reasoning and added a paragraph about why a tool that makes branch-per-agent the normal path is worth more than its components.
 - After the first full build I said the diff was decoration, since nothing was ever removed, and asked for the site to lean all the way in. That produced the pull-request frame: the state marker, the files-changed nav with real counts, Home as the newest commit with honest removals, the CV as a commit log, and a footer of checks the build actually runs.
+- I asked for changed lines to tint their text the way a diff does, in both palettes, and for the projects page to read as the documentation inside each repo, which produced the data-flow diagrams.
 
 What was delegated:
 
@@ -40,6 +41,7 @@ What was delegated:
 - The "Last built" date in the footer is the build machine's UTC date.
 - One stylesheet with hand-managed specificity. Fine at this size, and it will not stay fine if the site grows.
 - The three `-`/`+` pairs on Home and the state line in the header are copy written during the build rather than carried from the content pack. Every fact in them traces to the hub, but the wording has not been through the hub's clearance pass.
+- The data-flow diagrams on the projects page are hand-authored from facts in the content pack and the master document. They are not generated from the repos, so a change in a repo's architecture will not update them.
 
 ## What's next
 

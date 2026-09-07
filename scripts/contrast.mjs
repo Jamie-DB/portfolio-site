@@ -3,11 +3,11 @@
 // the result lands in every page's footer and a failure stops the build.
 const themes = {
   light: { paper: '#ffffff', ink: '#000000', ink2: '#6b6b6b',
-    rg: { add: '#177a38', addBg: '#eaf6ee', del: '#b3261e', delBg: '#fdeeed' },
-    cb: { add: '#1b4bd1', addBg: '#eef3ff', del: '#8e2c5a', delBg: '#fbeff5' } },
+    rg: { add: '#177a38', addBg: '#eaf6ee', addInk: '#0f5a2a', del: '#b3261e', delBg: '#fdeeed', delInk: '#8a1c15' },
+    cb: { add: '#1b4bd1', addBg: '#eef3ff', addInk: '#12379e', del: '#8e2c5a', delBg: '#fbeff5', delInk: '#6e1f45' } },
   dark: { paper: '#000000', ink: '#f2f2f2', ink2: '#9a9a9a',
-    rg: { add: '#6fd18a', addBg: '#0d2616', del: '#f28b82', delBg: '#2c1210' },
-    cb: { add: '#8aa6ff', addBg: '#0b1533', del: '#e393bf', delBg: '#2a0f1d' } },
+    rg: { add: '#6fd18a', addBg: '#0d2616', addInk: '#8fe0a5', del: '#f28b82', delBg: '#2c1210', delInk: '#f5a09a' },
+    cb: { add: '#8aa6ff', addBg: '#0b1533', addInk: '#a3b8ff', del: '#e393bf', delBg: '#2a0f1d', delInk: '#eaa6cc' } },
 };
 const lum = (hex) => {
   const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255)
@@ -26,8 +26,8 @@ export function runContrast() {
     for (const [pal, c] of [['red/green', t.rg], ['colorblind', t.cb]]) {
       checks.push([`${pal} + marker on add bg`, c.add, c.addBg, 3],
         [`${pal} - marker on del bg`, c.del, c.delBg, 3],
-        [`${pal} body text on add bg`, t.ink, c.addBg, 4.5],
-        [`${pal} body text on del bg`, t.ink, c.delBg, 4.5],
+        [`${pal} added text on add bg`, c.addInk, c.addBg, 4.5],
+        [`${pal} removed text on del bg`, c.delInk, c.delBg, 4.5],
         [`${pal} meta text on add bg`, t.ink2, c.addBg, 4.5],
         [`${pal} + marker on paper`, c.add, t.paper, 3],
         [`${pal} - marker on paper`, c.del, t.paper, 3]);

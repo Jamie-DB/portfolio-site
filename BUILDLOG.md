@@ -40,6 +40,10 @@ I looked at the first full build and said it was using the diff as decoration: n
 
 Two things the screenshots caught on the way. The new state marker's class collided with the "open" thread marker, which drew a grey blob over my name. And a `| head -2` on the build command killed the build mid-write with a broken pipe, so for a few minutes the preview server was serving half a site. Both fixed, the second by not doing that, and then, after doing it a second time on the very next rebuild, by making the build ignore a closed stdout so it cannot happen a third.
 
+## Sep 7, 2026. Tinted text, and projects as documentation
+
+Two more corrections from me after looking at the pull-request build. First, a diff tints the text, not only the background, and white text on red and green broke the illusion. Changed lines now take a darker shade of their hue on paper and a lighter one on black, in both palettes, with the contrast checker extended to cover the new pairs. Strikethrough held for a later round. Second, the projects page should look like the documentation you would find inside each repo. Each project now carries a data-flow diagram built from the same facts as the copy, a verification line where there is one to state, and its shortcoming as a review note. The diagrams are mono boxes and arrow glyphs, so they print, work in both themes, and stack on a phone.
+
 ## Sep 7, 2026. Hand-off
 
 README to the standard, this log, one tracking issue, a pull request updated after the pull-request reframe. Not done yet: the Cloudflare connection and the live URL, which happen from the dashboard. Open for the hub: three third-person rows in the audit source on a first-person page, a "four rejections" count in the content pack that is five in the source, and the LinkedIn article link.

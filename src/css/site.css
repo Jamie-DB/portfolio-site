@@ -32,9 +32,10 @@
   /* Diff hues. Red and green by default, the way the tools do it. The
      colorblind palette swaps in blue and plum. Markers carry the meaning on
      their own, so color is never the only channel. */
-  --rg-add: #177a38; --rg-add-bg: #eaf6ee; --rg-del: #b3261e; --rg-del-bg: #fdeeed;
-  --cb-add: #1b4bd1; --cb-add-bg: #eef3ff; --cb-del: #8e2c5a; --cb-del-bg: #fbeff5;
-  --add: var(--rg-add); --add-bg: var(--rg-add-bg); --del: var(--rg-del); --del-bg: var(--rg-del-bg);
+  --rg-add: #177a38; --rg-add-bg: #eaf6ee; --rg-add-ink: #0f5a2a; --rg-del: #b3261e; --rg-del-bg: #fdeeed; --rg-del-ink: #8a1c15;
+  --cb-add: #1b4bd1; --cb-add-bg: #eef3ff; --cb-add-ink: #12379e; --cb-del: #8e2c5a; --cb-del-bg: #fbeff5; --cb-del-ink: #6e1f45;
+  --add: var(--rg-add); --add-bg: var(--rg-add-bg); --add-ink: var(--rg-add-ink);
+  --del: var(--rg-del); --del-bg: var(--rg-del-bg); --del-ink: var(--rg-del-ink);
   --serif: 'Source Serif 4', Charter, 'Iowan Old Style', Georgia, serif;
   --mono: 'Commit Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   --measure: 38rem;
@@ -46,7 +47,8 @@
   color-scheme: light;
 }
 [data-palette="colorblind"] {
-  --add: var(--cb-add); --add-bg: var(--cb-add-bg); --del: var(--cb-del); --del-bg: var(--cb-del-bg);
+  --add: var(--cb-add); --add-bg: var(--cb-add-bg); --add-ink: var(--cb-add-ink);
+  --del: var(--cb-del); --del-bg: var(--cb-del-bg); --del-ink: var(--cb-del-ink);
 }
 [data-mono="departure"] { --mono: 'Departure Mono', ui-monospace, monospace; }
 
@@ -56,8 +58,8 @@
     --ink: #f2f2f2;
     --ink-2: #9a9a9a;
     --rule: #333333;
-    --rg-add: #6fd18a; --rg-add-bg: #0d2616; --rg-del: #f28b82; --rg-del-bg: #2c1210;
-    --cb-add: #8aa6ff; --cb-add-bg: #0b1533; --cb-del: #e393bf; --cb-del-bg: #2a0f1d;
+    --rg-add: #6fd18a; --rg-add-bg: #0d2616; --rg-add-ink: #8fe0a5; --rg-del: #f28b82; --rg-del-bg: #2c1210; --rg-del-ink: #f5a09a;
+    --cb-add: #8aa6ff; --cb-add-bg: #0b1533; --cb-add-ink: #a3b8ff; --cb-del: #e393bf; --cb-del-bg: #2a0f1d; --cb-del-ink: #eaa6cc;
     color-scheme: dark;
   }
 }
@@ -66,8 +68,8 @@
   --ink: #f2f2f2;
   --ink-2: #9a9a9a;
   --rule: #333333;
-  --rg-add: #6fd18a; --rg-add-bg: #0d2616; --rg-del: #f28b82; --rg-del-bg: #2c1210;
-  --cb-add: #8aa6ff; --cb-add-bg: #0b1533; --cb-del: #e393bf; --cb-del-bg: #2a0f1d;
+  --rg-add: #6fd18a; --rg-add-bg: #0d2616; --rg-add-ink: #8fe0a5; --rg-del: #f28b82; --rg-del-bg: #2c1210; --rg-del-ink: #f5a09a;
+  --cb-add: #8aa6ff; --cb-add-bg: #0b1533; --cb-add-ink: #a3b8ff; --cb-del: #e393bf; --cb-del-bg: #2a0f1d; --cb-del-ink: #eaa6cc;
   color-scheme: dark;
 }
 
@@ -181,8 +183,8 @@ li { margin-bottom: 0.5em; }
 }
 .add, .del { padding-top: 0.5rem; padding-bottom: 0.5rem; padding-right: var(--edge); margin-right: calc(-1 * var(--edge)); margin-bottom: 1em; }
 .add > :last-child, .del > :last-child, .note > :last-child { margin-bottom: 0; }
-.add { background: var(--add-bg); }
-.del { background: var(--del-bg); }
+.add { background: var(--add-bg); color: var(--add-ink); }
+.del { background: var(--del-bg); color: var(--del-ink); }
 .add::before, .del::before {
   position: absolute;
   left: var(--edge);
@@ -324,6 +326,18 @@ li { margin-bottom: 0.5em; }
 .file-head .stat { font-family: var(--mono); font-size: 0.8125rem; color: var(--ink-2); }
 .file .meta { margin-bottom: 0.75rem; }
 .file .meta a { margin-right: 1rem; }
+
+/* Documentation inside a file: a data-flow diagram built from the same facts
+   as the copy. Nodes are mono boxes, arrows are glyphs, rows wrap on a phone. */
+.doc-h { font-family: var(--mono); font-size: 0.8125rem; font-weight: 600; color: var(--ink-2); margin: 1.25rem 0 0.5rem; }
+.flow { margin: 0 0 1rem; }
+.flow ol { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; align-items: stretch; gap: 0.5rem 0; }
+.flow li { display: flex; align-items: center; }
+.flow li + li::before { content: '\2192'; font-family: var(--mono); font-size: 0.9375rem; color: var(--ink-2); padding: 0 0.5rem; }
+.flow .box { display: block; border: 1px solid var(--ink); padding: 0.35rem 0.6rem; font-family: var(--mono); font-size: 0.8125rem; line-height: 1.4; max-width: 13rem; }
+.flow .box b { font-weight: 600; }
+.flow .box small { display: block; font-size: 0.75rem; color: var(--ink-2); }
+.verification { font-family: var(--mono); font-size: 0.8125rem; color: var(--ink-2); margin: 0 0 1rem; }
 
 /* CV: experience is a commit log on a rail. Dates sit in a wider gutter on
    desktop and above the subject line on a phone. */
