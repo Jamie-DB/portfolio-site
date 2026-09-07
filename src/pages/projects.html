@@ -1,0 +1,29 @@
+---
+title: Projects
+path: /projects/
+description: Three public repos with build logs anyone can read, and two private projects whose build records are the source of the case studies.
+---
+<h1>Projects</h1>
+
+<section class="project">
+  <h2>yt_transcript_mcp</h2>
+  <p class="meta"><a href="https://github.com/Jamie-DB/yt_transcript_mcp">README</a> <a href="https://github.com/Jamie-DB/yt_transcript_mcp/blob/main/BUILDLOG.md">Build log</a> public</p>
+  <p>A Swift 6 MCP server that pulls YouTube transcripts through the InnerTube API. No Node, no Python. I built it because watching a video for information, even at double speed, is now the slow path, and turning it into text makes it something I can synthesize and act on straight away. Built in a day with a 27-issue review trail, in daily use since. Shortcoming: one documented maintenance point, and it is not hosted, so it runs locally only.</p>
+</section>
+
+<section class="project">
+  <h2>chordsheet</h2>
+  <p class="meta"><a href="https://github.com/Jamie-DB/chordsheet">README</a> <a href="https://github.com/Jamie-DB/chordsheet/blob/main/BUILDLOG.md">Build log</a> public</p>
+  <p>A web app for play-along guitar chord sheets, written in TypeScript with 248 tests. The interesting design constraint is legal, not technical: the AI assist only ever emits chord names and positions anchored to lyrics the user already has, never lyric content, which is why it works at all where a naive prompt gets refused. Shortcomings, stated in the README: Chromium-only folder save, no mobile layout, no undo, approximate voicings for unusual chords, and the tests stop at the UI boundary.</p>
+</section>
+
+<section class="project">
+  <h2>history-heatmap</h2>
+  <p class="meta"><a href="https://github.com/Jamie-DB/history-heatmap">README</a> <a href="https://github.com/Jamie-DB/history-heatmap/blob/main/BUILDLOG.md">Build log</a> <a href="https://jamie-db.github.io/history-heatmap/">Live demo</a> public</p>
+  <p>An engine for visualizing historical population dynamics from AD 33 to the present, in one self-contained HTML file with no server and no dependencies. An analytical gaussian heat field evaluated per viewport at constant cost, mass-conserving anti-aliasing for city-scale overlays, and a hybrid model that blends hand-curated anchor data with logistic growth and diffusion. City lifecycle events are pure functions of the playhead, so scrubbing backward replays conquests in reverse with no extra state. The current Christianity and Islam dataset is the first lens rather than the point, and more population types are planned. Shortcoming, stated plainly: I have not audited the dataset's sources. The engineering I will defend. The numbers are unaudited estimates assembled from standard scholarship.</p>
+</section>
+
+<section class="project">
+  <h2 class="serif">Also in flight, not public</h2>
+  <p>magenta_pipeline, a three-phase Python, OpenCV, and Photoshop automation chain recovering legacy sprite sheets for a Unity project. A Warmongers reboot in Unity, rebuilding a title that reached No. 20 Top Free on the US App Store. Both are private repos, cited here because their build records are the source of the <a href="/how-i-build/">case studies</a>.</p>
+</section>

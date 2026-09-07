@@ -2,6 +2,7 @@
 // generated markdown in content/. No framework. Run with `npm run build`.
 import { readFile, writeFile, mkdir, cp, readdir, rm, access } from 'node:fs/promises';
 import path from 'node:path';
+import { marked } from 'marked';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const SRC = path.join(ROOT, 'src');
@@ -18,6 +19,7 @@ const SITE = {
 // Preview-only switches for side-by-side builds. Never set in production.
 const MONO = process.env.MONO || '';   // '' | 'departure'
 const THEME = process.env.THEME || ''; // '' | 'dark' | 'light'
+const PALETTE = process.env.PALETTE || ''; // '' | 'colorblind'
 
 const NAV = [
   { href: '/', label: 'Home' },
@@ -58,6 +60,7 @@ function layout({ meta, body }) {
   const built = new Date().toISOString().slice(0, 10);
   const attrs = [
     THEME ? ` data-theme="${THEME}"` : '',
+    PALETTE ? ` data-palette="${PALETTE}"` : '',
     MONO ? ` data-mono="${MONO}"` : '',
   ].join('');
   return `<!doctype html>
@@ -72,7 +75,7 @@ function layout({ meta, body }) {
   <meta property="og:title" content="${esc(title)}">
   <meta property="og:description" content="${esc(meta.description)}">
   <meta property="og:url" content="${url}">
-  <script>(function(){try{var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}})();</script>
+  <script>(function(){try{var d=document.documentElement,t=localStorage.getItem('theme'),p=localStorage.getItem('palette');if(t)d.setAttribute('data-theme',t);if(p)d.setAttribute('data-palette',p)}catch(e){}})();</script>
   <link rel="stylesheet" href="/css/site.css">
 </head>
 <body>
@@ -88,8 +91,12 @@ ${body.trim()}
     </main>
     <footer class="colophon">
       <p>Built with Claude Code and reviewed by me. <a href="${SITE.repo}">Source</a> and <a href="${SITE.buildlog}">build log</a> on GitHub. Last built ${built}.</p>
-      <button class="theme-toggle" type="button" hidden>Dark mode</button>
+      <p>Diff colors default to red and green, the way the tools do it. The colorblind palette switches to blue and plum.</p>
     </footer>
+  </div>
+  <div class="controls" hidden>
+    <button type="button" data-control="theme" aria-pressed="false">Dark mode</button>
+    <button type="button" data-control="palette" aria-pressed="false">Colorblind palette</button>
   </div>
   <script src="/js/theme.js"></script>
 </body>
@@ -97,14 +104,55 @@ ${body.trim()}
 `;
 }
 
+// Generated content. Placeholders like {{audit-daily}} in a page fragment are
+// filled from content/*.md, which scripts/sync-sources.mjs produces from the
+// hub. Nothing in content/ is typed by hand.
+function mdTable(md, heading) {
+  const start = md.indexOf(`\n## ${heading}\n`);
+  if (start < 0) throw new Error(`content: no section "${heading}"`);
+  const body = md.slice(start + 1).split(/\n## /)[0];
+  return body.split('\n').filter((l) => l.startsWith('|')).slice(2)
+    .map((l) => l.slice(1, -1).split(' | ').map((c) => marked.parseInline(c.trim())));
+}
+
+// Each audit row renders as one diff line: context for what is in use, added
+// for what was just adopted, removed for what was evaluated and skipped.
+function auditRows(rows, role, withWhen) {
+  return `<dl class="rows lines">\n` + rows.map((cells) => {
+    const [tool, when, why] = withWhen ? cells : [cells[0], null, cells[1]];
+    return `  <div class="row ${role}">\n    <dt>${tool}</dt>\n    <dd>${when ? `<span class="when">${when}</span> ` : ''}${why}</dd>\n  </div>`;
+  }).join('\n') + `\n</dl>`;
+}
+
+async function generated() {
+  const audit = await readFile(path.join(ROOT, 'content', 'ai-tooling-audit.md'), 'utf8');
+  const cv = await readFile(path.join(ROOT, 'content', 'cv.md'), 'utf8').catch(() => '');
+  return {
+    'audit-date': audit.match(/^Last audited: (.+)$/m)[1],
+    'audit-daily': auditRows(mdTable(audit, 'Use daily'), 'ctx', false),
+    'audit-adopted': auditRows(mdTable(audit, 'Just adopted'), 'add', true),
+    'audit-skipped': auditRows(mdTable(audit, 'Evaluated and skipped'), 'del', true),
+    'cv': cv ? marked.parse(cv) : '',
+  };
+}
+
+function fill(body, values) {
+  return body.replace(/\{\{([a-z-]+)\}\}/g, (m, key) => {
+    if (!(key in values)) throw new Error(`unknown placeholder ${m}`);
+    return values[key];
+  });
+}
+
 async function exists(p) {
   try { await access(p); return true; } catch { return false; }
 }
 
 async function writePage(meta, html) {
-  const dir = path.join(OUT, meta.path);
-  await mkdir(dir, { recursive: true });
-  await writeFile(path.join(dir, 'index.html'), html);
+  // "/404.html" is a file Cloudflare Pages serves for missing routes; every
+  // other path is a directory with an index.
+  const file = meta.path.endsWith('.html') ? path.join(OUT, meta.path) : path.join(OUT, meta.path, 'index.html');
+  await mkdir(path.dirname(file), { recursive: true });
+  await writeFile(file, html);
   console.log(`  ${meta.path}`);
 }
 
@@ -116,11 +164,22 @@ async function main() {
     const from = path.join(SRC, dir);
     if (await exists(from)) await cp(from, path.join(OUT, dir), { recursive: true });
   }
+  // Cloudflare Pages reads _headers from the output directory.
+  await writeFile(path.join(OUT, '_headers'), [
+    '/fonts/*',
+    '  Cache-Control: public, max-age=31536000, immutable',
+    '/*',
+    '  X-Content-Type-Options: nosniff',
+    '  Referrer-Policy: strict-origin-when-cross-origin',
+    '',
+  ].join('\n'));
 
   console.log('pages:');
+  const values = await generated();
   const pagesDir = path.join(SRC, 'pages');
   for (const file of (await readdir(pagesDir)).filter((f) => f.endsWith('.html')).sort()) {
     const page = parseFragment(await readFile(path.join(pagesDir, file), 'utf8'), file);
+    page.body = fill(page.body, values);
     await writePage(page.meta, layout(page));
   }
 
