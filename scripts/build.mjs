@@ -1,8 +1,13 @@
 // Builds ./dist from hand-authored page fragments in src/pages and the
 // generated markdown in content/. No framework. Run with `npm run build`.
+//
+// The site is framed as a pull request. The masthead is the PR header, the
+// nav is the files-changed list with real +/- counts, and the footer reports
+// the checks this build ran. A failed check fails the build.
 import { readFile, writeFile, mkdir, cp, readdir, rm, access } from 'node:fs/promises';
 import path from 'node:path';
 import { marked } from 'marked';
+import { runContrast } from './contrast.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const SRC = path.join(ROOT, 'src');
@@ -16,9 +21,15 @@ const SITE = {
   buildlog: 'https://github.com/Jamie-DB/portfolio-site/blob/main/BUILDLOG.md',
 };
 
+// The PR state. Open means available. Flip to Merged when the role lands.
+const STATE = {
+  word: 'Open',
+  line: 'Senior software engineer, Orlando, remote.',
+};
+
 // Preview-only switches for side-by-side builds. Never set in production.
-const MONO = process.env.MONO || '';   // '' | 'departure'
-const THEME = process.env.THEME || ''; // '' | 'dark' | 'light'
+const MONO = process.env.MONO || '';       // '' | 'departure'
+const THEME = process.env.THEME || '';     // '' | 'dark' | 'light'
 const PALETTE = process.env.PALETTE || ''; // '' | 'colorblind'
 
 const NAV = [
@@ -27,6 +38,18 @@ const NAV = [
   { href: '/how-i-build/', label: 'How I build software now' },
   { href: '/ai-tooling-audit/', label: 'AI tooling audit' },
   { href: '/cv/', label: 'CV and contact' },
+];
+
+// Never on a public surface. Scanned against every page's main content.
+const FORBIDDEN = [
+  [/notion/i, 'the stack name'],
+  [/jdbrownfs/i, 'the retired GitHub handle'],
+  [/hamstra/i, 'a private individual'],
+  [/\$\s?\d/, 'a money figure'],
+  [/presented to/i, '"presented" for something only prepared'],
+  [/—/, 'an em dash'],
+  [/\bGPA\b/, 'a GPA'],
+  [/christianity-heatmap/i, 'the old repo name'],
 ];
 
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -42,27 +65,36 @@ function parseFragment(text, file) {
   for (const k of ['title', 'path', 'description']) {
     if (!meta[k]) throw new Error(`${file}: front matter needs ${k}`);
   }
-  return { meta, body: m[2] };
+  return { meta, body: m[2].trim() };
 }
 
-function nav(current) {
-  return NAV.map((n) =>
-    n.href === current
-      ? `<span aria-current="page">${esc(n.label)}</span>`
-      : `<a href="${n.href}">${esc(n.label)}</a>`,
-  ).join('\n      ');
+// Real diff counts for the files-changed nav: one per added or removed block.
+function diffstat(html) {
+  const count = (cls) => (html.match(new RegExp(`class="[^"]*\\b${cls}\\b[^"]*"`, 'g')) || []).length;
+  return { add: count('add'), del: count('del') };
 }
 
-function layout({ meta, body }) {
+function nav(current, stats) {
+  return NAV.map((n) => {
+    const s = stats[n.href] || { add: 0, del: 0 };
+    const parts = [s.add ? `<span class="plus">+${s.add}</span>` : '', s.del ? `<span class="minus">-${s.del}</span>` : ''].filter(Boolean);
+    const stat = parts.length ? ` <span class="stat">${parts.join(' ')}</span>` : '';
+    return n.href === current
+      ? `<span aria-current="page">${esc(n.label)}${stat}</span>`
+      : `<a href="${n.href}">${esc(n.label)}${stat}</a>`;
+  }).join('\n      ');
+}
+
+function layout({ meta, body }, stats, checks) {
   const home = meta.path === '/';
   const title = home ? `${SITE.name}, senior software engineer` : `${meta.title} - ${SITE.name}`;
   const url = SITE.url + meta.path;
-  const built = new Date().toISOString().slice(0, 10);
   const attrs = [
     THEME ? ` data-theme="${THEME}"` : '',
     PALETTE ? ` data-palette="${PALETTE}"` : '',
     MONO ? ` data-mono="${MONO}"` : '',
   ].join('');
+  const bodyClass = meta.layout ? ` class="${meta.layout}"` : '';
   return `<!doctype html>
 <html lang="en"${attrs}>
 <head>
@@ -78,19 +110,21 @@ function layout({ meta, body }) {
   <script>(function(){try{var d=document.documentElement,t=localStorage.getItem('theme'),p=localStorage.getItem('palette');if(t)d.setAttribute('data-theme',t);if(p)d.setAttribute('data-palette',p)}catch(e){}})();</script>
   <link rel="stylesheet" href="/css/site.css">
 </head>
-<body>
+<body${bodyClass}>
   <div class="frame">
-    <header class="masthead">
-      <a class="name" href="/">${SITE.name}</a>
-      <nav class="site-nav" aria-label="Site">
-      ${nav(meta.path)}
+    <header class="pr">
+      <p class="pr-title"><a class="name" href="/">${SITE.name}</a> <span class="state open">${STATE.word}</span></p>
+      <p class="pr-line">${STATE.line}</p>
+      <nav class="files" aria-label="Site">
+      ${nav(meta.path, stats)}
       </nav>
     </header>
     <main id="main">
-${body.trim()}
+${body}
     </main>
     <footer class="colophon">
-      <p>Built with Claude Code and reviewed by me. <a href="${SITE.repo}">Source</a> and <a href="${SITE.buildlog}">build log</a> on GitHub. Last built ${built}.</p>
+      <p class="checks">${checks}</p>
+      <p>Built with Claude Code and reviewed by me. <a href="${SITE.repo}">Source</a> and <a href="${SITE.buildlog}">build log</a> on GitHub.</p>
       <p>Diff colors default to red and green, the way the tools do it. The colorblind palette switches to blue and plum.</p>
     </footer>
   </div>
@@ -124,6 +158,22 @@ function auditRows(rows, role, withWhen) {
   }).join('\n') + `\n</dl>`;
 }
 
+// The CV's experience entries are commits. In content/cv.md each role is an
+// h3 followed by a meta line whose <time> holds the dates. Wrap each one so
+// the stylesheet can draw the rail.
+function commits(html) {
+  const parts = html.split(/(?=<h3>)/);
+  return parts.map((part, i) => {
+    if (i === 0) return part;
+    const m = part.match(/^<h3>([\s\S]*?)<\/h3>\s*<p class="meta"><time>(.*?)<\/time>\s*([\s\S]*?)<\/p>/);
+    if (!m) return part;
+    const rest = part.slice(m[0].length);
+    const cut = rest.search(/<h2|<\/div>/);
+    const [inner, after] = cut < 0 ? [rest, ''] : [rest.slice(0, cut), rest.slice(cut)];
+    return `<article class="commit">\n<p class="when">${m[2]}</p>\n<h3>${m[1]}</h3>\n<p class="meta">${m[3]}</p>${inner}</article>\n${after}`;
+  }).join('');
+}
+
 async function generated() {
   const audit = await readFile(path.join(ROOT, 'content', 'ai-tooling-audit.md'), 'utf8');
   const cv = await readFile(path.join(ROOT, 'content', 'cv.md'), 'utf8').catch(() => '');
@@ -132,7 +182,7 @@ async function generated() {
     'audit-daily': auditRows(mdTable(audit, 'Use daily'), 'ctx', false),
     'audit-adopted': auditRows(mdTable(audit, 'Just adopted'), 'add', true),
     'audit-skipped': auditRows(mdTable(audit, 'Evaluated and skipped'), 'del', true),
-    'cv': cv ? marked.parse(cv) : '',
+    'cv': cv ? commits(marked.parse(cv)) : '',
   };
 }
 
@@ -141,6 +191,23 @@ function fill(body, values) {
     if (!(key in values)) throw new Error(`unknown placeholder ${m}`);
     return values[key];
   });
+}
+
+// Checks. The forbidden-terms scan runs on page content, not the chrome, so
+// the footer that reports it cannot trip it.
+function scan(pages) {
+  const hits = [];
+  let semicolons = 0;
+  for (const p of pages) {
+    const text = p.body.replace(/<!--[\s\S]*?-->/g, '');
+    for (const [re, why] of FORBIDDEN) {
+      if (re.test(text)) hits.push(`${p.meta.path}: ${why} (${re})`);
+    }
+    for (const para of text.match(/<p[^>]*>[\s\S]*?<\/p>/g) || []) {
+      if (/;/.test(para.replace(/&[a-z#0-9]+;/g, ''))) { semicolons++; hits.push(`${p.meta.path}: semicolon in prose`); }
+    }
+  }
+  return { hits, semicolons };
 }
 
 async function exists(p) {
@@ -153,7 +220,7 @@ async function writePage(meta, html) {
   const file = meta.path.endsWith('.html') ? path.join(OUT, meta.path) : path.join(OUT, meta.path, 'index.html');
   await mkdir(path.dirname(file), { recursive: true });
   await writeFile(file, html);
-  console.log(`  ${meta.path}`);
+  console.log(`  ${meta.path}${meta.stats.add || meta.stats.del ? `  +${meta.stats.add} -${meta.stats.del}` : ''}`);
 }
 
 async function main() {
@@ -174,16 +241,34 @@ async function main() {
     '',
   ].join('\n'));
 
-  console.log('pages:');
+  // Pass one: render every page body so the nav can carry real counts.
   const values = await generated();
   const pagesDir = path.join(SRC, 'pages');
+  const pages = [];
   for (const file of (await readdir(pagesDir)).filter((f) => f.endsWith('.html')).sort()) {
     const page = parseFragment(await readFile(path.join(pagesDir, file), 'utf8'), file);
     page.body = fill(page.body, values);
-    await writePage(page.meta, layout(page));
+    page.meta.stats = diffstat(page.body);
+    pages.push(page);
+  }
+  const stats = Object.fromEntries(pages.map((p) => [p.meta.path, p.meta.stats]));
+
+  // Checks, before anything is written.
+  const contrast = runContrast();
+  const { hits, semicolons } = scan(pages);
+  const built = new Date().toISOString().slice(0, 10);
+  const checks = `Checks on this build: contrast ${contrast.passed} of ${contrast.total} pass. Forbidden terms ${hits.length - semicolons}. Semicolons in prose ${semicolons}. Pages ${pages.length}. Built ${built}.`;
+  console.log(checks);
+  if (contrast.passed !== contrast.total || hits.length) {
+    for (const h of hits) console.error(`  FAIL ${h}`);
+    for (const r of contrast.results.filter((r) => !r.ok)) console.error(`  FAIL contrast ${r.theme} ${r.label} ${r.ratio.toFixed(2)}:1`);
+    throw new Error('checks failed, nothing written');
   }
 
+  // Pass two: write.
+  console.log('pages:');
+  for (const page of pages) await writePage(page.meta, layout(page, stats, checks));
   console.log(`built ${path.relative(ROOT, OUT)}/`);
 }
 
-main().catch((e) => { console.error(e); process.exit(1); });
+main().catch((e) => { console.error(e.message || e); process.exit(1); });

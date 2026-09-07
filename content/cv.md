@@ -7,8 +7,16 @@
 
 ## Experience
 
+<div class="commits">
+
+<article class="commit head">
+<p class="when">Sep 2026</p>
+<h3>Open to the next role</h3>
+<p class="meta">Remote. AI-augmented engineering, C-family systems and backend, Unity and simulation.</p>
+</article>
+
 ### Course Director, Software Engineering and UX Design
-<p class="meta">Full Sail University, Jul 2022 to Aug 2026</p>
+<p class="meta"><time>Jul 2022 to Aug 2026</time> Full Sail University</p>
 
 Taught and maintained five courses across six course sections: three in iOS development and two in game UX design. Coverage: Swift and SwiftUI, async/await concurrency, MVVM and three-layer architecture, Supabase backends, accessibility (VoiceOver, Dynamic Type), game UX, user onboarding, testing with XCTest, TestFlight and App Store distribution.
 
@@ -45,7 +53,7 @@ Taught and maintained five courses across six course sections: three in iOS deve
 - Integrated EA Positive Play accessibility case studies (the Apex Legends ping system, Fonttik) into the UX curriculum with critical industry evaluation.
 
 ### Senior Software Engineer, Tech Lead, Visualization and Control
-<p class="meta">Luminar Technologies, Jan 2020 to Jun 2022, remote</p>
+<p class="meta"><time>Jan 2020 to Jun 2022</time> Luminar Technologies, remote</p>
 
 An individual-contributor role first: hands-on engineering was at least three quarters of the job, with the team lead arc layered on top of it.
 
@@ -62,7 +70,7 @@ An individual-contributor role first: hands-on engineering was at least three qu
 - Daily stack: C++, C#, Unity, Bash, Python, CMake, Conan, git. Process: Jira, SAFe Agile, Plastic SCM.
 
 ### Department Chair, Mobile Development
-<p class="meta">Full Sail University, Jan 2016 to Jan 2020</p>
+<p class="meta"><time>Jan 2016 to Jan 2020</time> Full Sail University</p>
 
 - Led a team of 8 to 10 software engineering instructors building and maintaining computer science curriculum for the Mobile Development bachelor's program, across 8 to 13 concurrent iOS and Android courses.
 - Completed the rollout of the program from campus to online.
@@ -72,7 +80,7 @@ An individual-contributor role first: hands-on engineering was at least three qu
 - Kept writing software throughout: personal projects and freelance ran alongside the role for all four years.
 
 ### Course Director, iOS
-<p class="meta">Full Sail University, Jan 2014 to Jan 2016</p>
+<p class="meta"><time>Jan 2014 to Jan 2016</time> Full Sail University</p>
 
 - Created the university's first iOS computer science curriculum in Objective-C, then rebuilt it in Swift while the language was still in beta: three programming courses and one design course overhauled and rolled out in August 2014, two months after Swift was announced.
 - One of the first collegiate Swift programs in the country. Featured on Apple's Swift educators page in 2015, alongside Stanford.
@@ -80,7 +88,7 @@ An individual-contributor role first: hands-on engineering was at least three qu
 - Helped launch the specialized Mobile Development campus track. The foundational iOS curriculum was later expanded into a full degree program.
 
 ### Co-Founder, Software Engineer, Project Manager
-<p class="meta">Category 5 Games, LLC, Jun 2009 to Jan 2020</p>
+<p class="meta"><time>Jun 2009 to Jan 2020</time> Category 5 Games, LLC</p>
 
 A two-person studio. Full time for a little over five years, then maintenance and updates alongside a full-time career until 2020. All figures are lifetime and historical, since the titles are no longer on the stores.
 
@@ -94,7 +102,7 @@ A two-person studio. Full time for a little over five years, then maintenance an
 - Stacks across the years: Unity (from a 2007 beta, with the first Unity title shipped on Unity 3.x for iOS and Android), Cocoa Touch and UIKit, Objective-C, Swift, Java for native Android, C++, C#, XNA, Box2D, LibGDX, Torque2D, OpenGL, GLSL, Direct3D, JavaScript, Python.
 
 ### Independent work
-<p class="meta">2025 to present</p>
+<p class="meta"><time>2025 to present</time> Personal projects, all built with the workflow this site describes</p>
 
 - **yt_transcript_mcp.** Swift 6 MCP server fetching YouTube transcripts through the InnerTube API. No Node, no Python. Built in a day: five phases planned before any code, then findings filed by a second agent reviewing with fresh context. 27 issues the same day, 26 closed by end of day. In-memory caching keyed by returned language after review caught the requested-language bug, offline unit tests, SSRF designed out before the network code existed, packaged for Claude Desktop. Public, in daily use. Backlog: host it online for mobile access.
 - **chordsheet.** TypeScript, Vite, and Vitest web app for play-along guitar chord sheets, 248 tests across 17 files. The AI assist deliberately routes around copyright refusals by emitting only chord names anchored to lyrics the user already has. Monospace character-cell layout so print output is literal text rows, capo as a display transform, chord diagram voicing tables, setlists, File System Access API storage. From a one-paragraph idea to weekly rehearsal use in twelve days and 31 issues. Public.
@@ -103,6 +111,8 @@ A two-person studio. Full time for a little over five years, then maintenance an
 - **Warmongers reboot.** Rebuilding the 2012 title in Unity with Git and LFS, Claude Code as the primary development accelerator, and a Unity asset postprocessor enforcing canonical sprite import settings. The design corpus is versioned like code. Private, in progress.
 - **Course platform, May to Aug 2026.** The static, no-build site that served the two game UX courses to live cohorts: self-contained HTML pages per lesson, a hub with tabbed weeks, a gate with a maintenance switch. 85 commits. Offline since departure.
 - **AI workflow infrastructure.** Claude Code as the daily driver with an orchestrator-plus-subagents pattern, custom slash commands, hooks, and CLAUDE.md discipline. An always-on agent on a dedicated M1 Pro with 32GB running Qwen through Ollama for bulk work and the Claude API for reasoning, on a 60/30/10 cost rule.
+
+</div>
 
 ## Shipped products and projects
 

@@ -1,5 +1,6 @@
 // Checks every ink-on-paper pairing the stylesheet uses, in both themes and
-// both palettes, against WCAG AA. Run with `node scripts/contrast.mjs`.
+// both palettes, against WCAG AA. Run directly, or imported by the build so
+// the result lands in every page's footer and a failure stops the build.
 const themes = {
   light: { paper: '#ffffff', ink: '#000000', ink2: '#6b6b6b',
     rg: { add: '#177a38', addBg: '#eaf6ee', del: '#b3261e', delBg: '#fdeeed' },
@@ -14,26 +15,34 @@ const lum = (hex) => {
   return 0.2126 * r + 0.7152 * g + 0.0722 * b;
 };
 const ratio = (a, b) => { const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p); return (x + 0.05) / (y + 0.05); };
-let bad = 0;
-for (const [name, t] of Object.entries(themes)) {
-  const checks = [
-    ['body text on paper', t.ink, t.paper, 4.5],
-    ['meta text on paper', t.ink2, t.paper, 4.5],
-  ];
-  for (const [pal, c] of [['red/green', t.rg], ['colorblind', t.cb]]) {
-    checks.push([`${pal} + marker on add bg`, c.add, c.addBg, 3],
-      [`${pal} - marker on del bg`, c.del, c.delBg, 3],
-      [`${pal} body text on add bg`, t.ink, c.addBg, 4.5],
-      [`${pal} body text on del bg`, t.ink, c.delBg, 4.5],
-      [`${pal} meta text on add bg`, t.ink2, c.addBg, 4.5],
-      [`${pal} + marker on paper`, c.add, t.paper, 3],
-      [`${pal} - marker on paper`, c.del, t.paper, 3]);
+
+export function runContrast() {
+  const results = [];
+  for (const [name, t] of Object.entries(themes)) {
+    const checks = [
+      ['body text on paper', t.ink, t.paper, 4.5],
+      ['meta text on paper', t.ink2, t.paper, 4.5],
+    ];
+    for (const [pal, c] of [['red/green', t.rg], ['colorblind', t.cb]]) {
+      checks.push([`${pal} + marker on add bg`, c.add, c.addBg, 3],
+        [`${pal} - marker on del bg`, c.del, c.delBg, 3],
+        [`${pal} body text on add bg`, t.ink, c.addBg, 4.5],
+        [`${pal} body text on del bg`, t.ink, c.delBg, 4.5],
+        [`${pal} meta text on add bg`, t.ink2, c.addBg, 4.5],
+        [`${pal} + marker on paper`, c.add, t.paper, 3],
+        [`${pal} - marker on paper`, c.del, t.paper, 3]);
+    }
+    for (const [label, fg, bg, min] of checks) {
+      const r = ratio(fg, bg);
+      results.push({ theme: name, label, ratio: r, min, ok: r >= min });
+    }
   }
-  for (const [label, fg, bg, min] of checks) {
-    const r = ratio(fg, bg);
-    const ok = r >= min;
-    if (!ok) bad++;
-    console.log(`${ok ? 'ok  ' : 'FAIL'} ${name.padEnd(5)} ${label.padEnd(36)} ${r.toFixed(2)}:1 (min ${min})`);
-  }
+  return { results, passed: results.filter((r) => r.ok).length, total: results.length };
 }
-process.exit(bad ? 1 : 0);
+
+if (process.argv[1] && import.meta.url.endsWith(process.argv[1].split('/').pop())) {
+  const { results, passed, total } = runContrast();
+  for (const r of results) console.log(`${r.ok ? 'ok  ' : 'FAIL'} ${r.theme.padEnd(5)} ${r.label.padEnd(36)} ${r.ratio.toFixed(2)}:1 (min ${r.min})`);
+  console.log(`${passed}/${total} pass`);
+  process.exit(passed === total ? 0 : 1);
+}

@@ -73,8 +73,8 @@
 
 @media (max-width: 40rem) {
   :root { --gutter: 1.75rem; --edge: 1rem; --body: 1.0625rem; }
-  .masthead { font-size: 0.8125rem; gap: 0.25rem 1rem; }
-  .site-nav { gap: 0.25rem 0.75rem; }
+  .pr { font-size: 0.8125rem; }
+  .files { gap: 0.25rem 0.875rem; }
 }
 
 /* Base */
@@ -102,23 +102,27 @@ b, strong { font-weight: 600; }
 code, kbd, .mono { font-family: var(--mono); font-size: 0.9375em; }
 hr { border: 0; border-top: 1px solid var(--rule); margin: 2.5rem 0; }
 
-/* Masthead: name and nav, in the machine voice */
-.masthead {
-  font-family: var(--mono);
-  font-size: 0.875rem;
-  line-height: 1.6;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem 1.5rem;
-  align-items: baseline;
-  margin-bottom: 3rem;
-}
-.masthead .name { font-weight: 600; text-decoration: none; }
-.masthead .name:hover { text-decoration: underline; }
-.site-nav { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; }
-.site-nav a { text-decoration: none; color: var(--ink-2); white-space: nowrap; }
-.site-nav a:hover { color: var(--ink); text-decoration: underline; }
-.site-nav [aria-current="page"] { color: var(--ink); font-weight: 600; }
+/* PR header. The site is framed as an open pull request: the name is the
+   title, the state marker is availability, the nav is the files-changed list
+   with real counts from each page. */
+.pr { font-family: var(--mono); margin: 0 0 3rem calc(-1 * var(--gutter)); }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.pr-title { font-size: 1.125rem; margin: 0 0 0.35rem; display: flex; align-items: baseline; gap: 0.75rem; flex-wrap: wrap; }
+.pr-title .name { font-weight: 600; text-decoration: none; }
+.pr-title .name:hover { text-decoration: underline; }
+.state { font-size: 0.8125rem; font-weight: 600; white-space: nowrap; }
+.state::before { content: ''; display: inline-block; width: 0.6em; height: 0.6em; border-radius: 50%; background: currentColor; margin-right: 0.4em; vertical-align: 0.05em; }
+.state.open { color: var(--add); }
+.state.resolved { color: var(--ink-2); font-weight: 400; font-family: var(--mono); font-size: 0.75rem; margin-left: 0.75em; vertical-align: 0.15em; }
+.state.resolved::before { background: var(--ink-2); }
+.pr-line { font-size: 0.875rem; color: var(--ink-2); margin: 0 0 1rem; }
+.files { display: flex; flex-wrap: wrap; gap: 0.25rem 1.1rem; font-size: 0.8125rem; line-height: 1.6; padding-top: 0.75rem; border-top: 1px solid var(--rule); }
+.files a { text-decoration: none; color: var(--ink-2); white-space: nowrap; }
+.files a:hover { color: var(--ink); text-decoration: underline; }
+.files [aria-current="page"] { color: var(--ink); font-weight: 600; white-space: nowrap; }
+.files .stat { font-weight: 400; font-size: 0.8125rem; }
+.stat .plus { color: var(--add); }
+.stat .minus { color: var(--del); }
 
 /* Headings. Page titles read like a commit subject line. Section heads stay near body size. */
 h1 {
@@ -232,6 +236,7 @@ li { margin-bottom: 0.5em; }
   color: var(--ink-2);
 }
 .colophon p { margin: 0 0 0.5em; max-width: 34rem; }
+.colophon .checks { color: var(--ink); }
 
 /* Display controls. Fixed in the corner so they are reachable from anywhere
    on a long page. Text labels say what pressing does. */
@@ -257,16 +262,16 @@ li { margin-bottom: 0.5em; }
 .controls button[aria-pressed="true"] { color: var(--paper); background: var(--ink); border-color: var(--ink); }
 @media (max-width: 40rem) { .controls .more { display: none; } }
 
-/* Consecutive changed lines form one block, each line with its own marker. */
-.lines .add, .lines .del { margin-bottom: 0; padding-top: 0.3rem; padding-bottom: 0.3rem; }
-.lines .add:first-child, .lines .del:first-child { padding-top: 0.6rem; }
-.lines .add:last-child, .lines .del:last-child { padding-bottom: 0.6rem; margin-bottom: 1.5rem; }
-.lines .add::before, .lines .del::before { top: 0.3rem; }
-.lines .add:first-child::before, .lines .del:first-child::before { top: 0.6rem; }
+/* Consecutive lines of a hunk form one block, each changed line with its own marker. */
+.lines > .add, .lines > .del, .lines > .ctx { margin-bottom: 0; padding-top: 0.3rem; padding-bottom: 0.3rem; }
+.lines > :first-child { padding-top: 0.6rem; }
+.lines > :last-child { padding-bottom: 0.6rem; margin-bottom: 1.5rem; }
+.lines > .add::before, .lines > .del::before { top: 0.3rem; }
+.lines > .add:first-child::before, .lines > .del:first-child::before { top: 0.6rem; }
 
 @media print {
   :root { --paper: #fff; --ink: #000; --ink-2: #444; --rule: #999; --add-bg: #eef; --del-bg: #fee; }
-  .site-nav, .controls { display: none; }
+  .files, .controls { display: none; }
   .frame { padding: 0 0 0 var(--gutter); max-width: none; }
   a { text-decoration: none; }
   * { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
@@ -288,9 +293,9 @@ li { margin-bottom: 0.5em; }
 .rows dd { margin: 0; }
 .rows .when { display: block; font-family: var(--mono); font-size: 0.8125rem; color: var(--ink-2); margin-bottom: 0.25rem; }
 
-/* An open thread: a question the record has not closed. */
-.open { position: relative; margin-left: calc(-1 * (var(--gutter) + var(--edge))); padding-left: calc(var(--gutter) + var(--edge)); margin-top: 1.5em; }
-.open::before {
+/* An unresolved thread: a question the record has not closed. */
+.unresolved { position: relative; margin-left: calc(-1 * (var(--gutter) + var(--edge))); padding-left: calc(var(--gutter) + var(--edge)); margin-top: 1.5em; }
+.unresolved::before {
   content: 'open';
   position: absolute;
   left: var(--edge);
@@ -302,7 +307,7 @@ li { margin-bottom: 0.5em; }
   line-height: 1.6;
   color: var(--ink-2);
 }
-.open::after {
+.unresolved::after {
   content: '';
   position: absolute;
   left: calc(var(--edge) + var(--gutter) / 2 - 1px);
@@ -311,16 +316,34 @@ li { margin-bottom: 0.5em; }
   border-left: 2px dotted var(--ink-2);
 }
 
-/* Projects */
-.project h2 { font-family: var(--mono); font-size: 1.125rem; margin-bottom: 0.25rem; }
-.project h2.serif { font-family: var(--serif); font-size: 1.25rem; }
-.project .meta a { margin-right: 1rem; }
-.project .meta { margin-bottom: 0.75rem; }
+/* Projects: each repo is a file in the change set, with a diff-style file header. */
+.file { margin: 0 0 3rem; }
+.file-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.25rem 1rem; border-top: 1px solid var(--rule); padding-top: 0.75rem; margin: 0 0 0.25rem; }
+.file-head h2 { font-family: var(--mono); font-size: 1.125rem; margin: 0; }
+.file-head h2.serif { font-family: var(--serif); font-size: 1.25rem; }
+.file-head .stat { font-family: var(--mono); font-size: 0.8125rem; color: var(--ink-2); }
+.file .meta { margin-bottom: 0.75rem; }
+.file .meta a { margin-right: 1rem; }
 
-/* CV */
+/* CV: experience is a commit log on a rail. Dates sit in a wider gutter on
+   desktop and above the subject line on a phone. */
+body.cv { --rail: 1rem; }
+@media (min-width: 40.01rem) { body.cv { --gutter: 12.5rem; } }
+@media (max-width: 40rem) { body.cv { --rail: 0.875rem; } }
 .cv h2 { margin-top: 3.5rem; }
 .cv h3 { font-size: 1.125rem; margin: 2.25rem 0 0.25rem; }
 .cv h3 + .meta { margin-bottom: 0.75rem; }
+.commits { position: relative; }
+.commits::before { content: ''; position: absolute; top: 0.6em; bottom: 0; left: calc(-1 * var(--rail) - 1px); border-left: 2px solid var(--rule); }
+.commit { position: relative; margin: 0 0 2.5rem; }
+.commit::before { content: ''; position: absolute; left: calc(-1 * var(--rail) - 5px); top: 0.5em; width: 10px; height: 10px; border-radius: 50%; background: var(--ink); }
+.commit.head::before { background: var(--add); }
+.commit h3 { margin: 0 0 0.15rem; }
+.commit .when { font-family: var(--mono); font-size: 0.8125rem; color: var(--ink-2); margin: 0 0 0.25rem; }
+.commit .meta { margin-bottom: 0.75rem; }
+@media (min-width: 40.01rem) {
+  .commit .when { position: absolute; left: calc(-1 * var(--gutter)); width: calc(var(--gutter) - var(--rail) - 1rem); text-align: right; top: 0.25em; margin: 0; }
+}
 .cv ul { padding-left: 1.25rem; }
 .cv li { margin-bottom: 0.4em; }
 .cv table { border-collapse: collapse; width: 100%; font-size: 0.9375rem; margin: 0 0 1.5rem; }

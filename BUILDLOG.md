@@ -34,6 +34,12 @@ Carried across by hand with a clearance pass, since the master document is 415 l
 
 Home, Projects, How I build software now, AI tooling audit, CV and contact. A grep over the built HTML for every forbidden term found nothing. Screenshots found one thing: removed rows on the audit page rendered as separate blocks with gaps, because the stacked-lines rule only covered added lines. Fixed the same pass.
 
+## Sep 7, 2026. "Let's really really lean into it"
+
+I looked at the first full build and said it was using the diff as decoration: nothing on the site was ever removed. The reversal that followed is the biggest of the day. The site is now framed as a pull request. The masthead is the PR header with a state marker reading Open, which is both the PR state and the job status, and the nav is the files-changed list with each page's real added and removed counts computed at build time. Home became the newest commit, with three honest removals: the role that ended, the per-action approval that review replaced, and the three repos that went from private to public. The CV became a commit log on a rail, dates in a wider gutter. Each project became a file with a diff-style header and its shortcoming pulled out as a review note. Case studies carry a resolved marker, the audit caveat keeps its open one. And the footer became Checks: the build now runs the contrast check and the forbidden-terms scan itself, prints the results on every page, and refuses to write anything if either fails.
+
+Two things the screenshots caught on the way. The new state marker's class collided with the "open" thread marker, which drew a grey blob over my name. And a `| head -2` on the build command killed the build mid-write with a broken pipe, so for a few minutes the preview server was serving half a site. Both fixed, the second by not doing that.
+
 ## Sep 7, 2026. Hand-off
 
-README to the standard, this log, one tracking issue, a pull request. Not done yet: the Cloudflare connection and the live URL, which happen from the dashboard. Open for the hub: three third-person rows in the audit source on a first-person page, a "four rejections" count in the content pack that is five in the source, and the LinkedIn article link.
+README to the standard, this log, one tracking issue, a pull request updated after the pull-request reframe. Not done yet: the Cloudflare connection and the live URL, which happen from the dashboard. Open for the hub: three third-person rows in the audit source on a first-person page, a "four rejections" count in the content pack that is five in the source, and the LinkedIn article link.
