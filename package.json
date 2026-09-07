@@ -1,0 +1,21 @@
+{
+  "name": "portfolio-site",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Jamie Brown's portfolio site. Static, built with Claude Code and reviewed by hand.",
+  "type": "module",
+  "scripts": {
+    "sync": "node scripts/sync-sources.mjs",
+    "build": "node scripts/build.mjs",
+    "serve": "node scripts/serve.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "marked": "^18.0.12"
+  },
+  "devDependencies": {
+    "puppeteer-core": "^24.43.1"
+  }
+}

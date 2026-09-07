@@ -1,0 +1,86 @@
+---
+title: How I build software now
+path: /how-i-build/
+description: AI has collapsed the cost of building. It has not collapsed the cost of verifying, and the gap between those two is where ready lives now. A working model and four case studies from real Claude Code sessions.
+---
+<h1>How I build software now</h1>
+
+<h2>Working model</h2>
+
+<ol class="model">
+  <li><b>Direction first, in my head.</b> Planning, data, and design happen before a repo exists. I use LLMs to distill that direction into design-ready documentation with the reasoning, rules, and findings attached. Code comes third. The direction is never delegated. The distillation is.</li>
+  <li><b>What I delegate.</b> Generation and mechanical breadth. Drafts, scaffolds, migrations, bulk edits, and the second opinion I would otherwise never get working alone.</li>
+  <li><b>What I never delegate.</b> Whether the thing is right. Architecture calls, taste calls, and the decision that something is done stay with me, including the times the agent's answer is technically correct.</li>
+  <li><b>How I verify.</b> A second agent with fresh context reviews the first one's work and files findings as issues instead of applying silent fixes. I arbitrate. Nothing merges on an agent's own say-so, and failures get written down the same day they happen, while the reasoning is still recoverable.</li>
+  <li><b>The standard.</b> AI has collapsed the cost of building. It has not collapsed the cost of verifying, and the gap between those two is where ready lives now. Ready means checked, not generated.</li>
+</ol>
+
+<!-- SLOT: 2-minute narrated screen recording embeds here. Jamie records it after launch. Ship without it. -->
+
+<section class="hunk">
+  <h2 class="hunk-head"><span class="range">@@ case study 1 @@</span>The scan you run before the irreversible thing</h2>
+
+  <p class="ctx"><b>Situation.</b> One of my repos was a single command from going public, and my personal song library was sitting in it, 47 files that could not ship in a public repo. A history rewrite was staged to strip them out of every commit and main was ready to force push.</p>
+
+  <p class="ctx"><b>What the pre-flip scan turned up.</b> Three branches were still sitting on the remote, left behind by pull requests that had been rebase-merged rather than merged. Force pushing main alone would have left all three pointing at the old, unrewritten history. Flipping the repo to public would have published all 47 files anyway, out of branches nobody was looking at.</p>
+
+  <p class="ctx">The plan was correct as far as it went. It went one branch short. Nothing was going to volunteer that, because everything about the main-branch rewrite was right, and the flip would have looked clean.</p>
+
+  <div class="add">
+    <p><b>Result.</b> Caught before the rewrite ran, so it cost nothing. That scan is now step two of a written flip procedure, and every repo I have made public since has run it. The general version: on an action you cannot take back, the interesting work is the scan you run before it, not the command itself. It is also why I merge with merge commits instead of rebasing, which is the rule that would have prevented the whole situation and had not been followed.</p>
+  </div>
+</section>
+
+<section class="hunk">
+  <h2 class="hunk-head"><span class="range">@@ case study 2 @@</span>Overruling the thing I asked for an hour earlier</h2>
+
+  <p class="ctx"><b>Situation.</b> Section dynamics marks had just shipped in my chord sheet app with tinted section backgrounds, built exactly as I specified an hour before.</p>
+
+  <p class="ctx"><b>What I said:</b></p>
+
+  <div class="note">
+    <blockquote>New tact. no background color, it's too busy. How about just tags, and side-bar markings. Is a section is marked tacet, let's play with reducing the font of the words and chords by about 33% so that section tightens up and moves out of the way, but is still followable on a music stand.</blockquote>
+    <p class="who">Jamie Brown, in session</p>
+  </div>
+
+  <p class="ctx">The judgment is in the last clause. This artifact gets read at arm's length, mid-song, on a music stand. Working correctly was never the bar.</p>
+
+  <div class="add">
+    <p><b>Result.</b> Tag pills, a print sidebar with a thin edge bar, and tacet sections at two-thirds size. The tinted version lasted about an hour. That app went from a one-paragraph idea to weekly rehearsal use over twelve days and 31 issues, and it is still the tool I actually play from.</p>
+  </div>
+</section>
+
+<section class="hunk">
+  <h2 class="hunk-head"><span class="range">@@ case study 3 @@</span>Killing my own headline algorithm</h2>
+
+  <p class="ctx"><b>Situation.</b> A recovery pipeline had to pull legacy sprite art out from under a flattened magenta overlay, and the method named in my own spec was OpenCV Navier-Stokes inpainting.</p>
+
+  <p class="ctx"><b>From the findings issue I wrote during the build:</b></p>
+
+  <div class="note">
+    <blockquote>even with mask dilation and post-scrub passes, it kept producing artifacts. Replaced entirely.</blockquote>
+    <p class="who">Jamie Brown, findings issue</p>
+  </div>
+
+  <p class="ctx">Inpainting samples from neighboring pixels, including the magenta-tinted ones, so it spreads the contamination it was there to remove. It had already survived one fix and one rework before I accepted that. I also tried a closed-form un-blend, which is correct algebra and still failed: dividing by (1-t) amplifies the green channel, and the alpha estimate is not precise enough for the error to cancel, so every mask edge grew a green fringe.</p>
+
+  <div class="add">
+    <p><b>Result.</b> Nearest-neighbor fill via a distance transform. The boring method won on visual ground truth. Both failures went into the findings issue the same day they happened, which is the only reason I can explain them now, five months on, with the build transcripts long since gone.</p>
+  </div>
+</section>
+
+<section class="hunk">
+  <h2 class="hunk-head"><span class="range">@@ case study 4 @@</span>Making the reviewer someone else</h2>
+
+  <p class="ctx"><b>Situation.</b> A one-day solo build of a Swift MCP server that turns YouTube videos into text I can act on immediately.</p>
+
+  <p class="ctx"><b>What I did.</b> Two agent sessions ran at once: one building, one reviewing from the same directory with fresh context, filing every finding as a GitHub issue instead of applying a silent fix. An agent reviewing its own work argues for it. An agent that has never seen the work does not.</p>
+
+  <p class="ctx">The catch that justifies the setup: the in-memory cache keyed transcripts by the language the caller requested. With fallback behavior, asking for Spanish on an English-only video returns English and stores it under "es," poisoning every later lookup for that video. Everything appears to work, which is exactly how that class of bug ships.</p>
+
+  <div class="add">
+    <p><b>Result.</b> 27 issues on the build day, 17 of them review findings, 26 closed by the end of it, and a review trail anyone can read. The cache fix landed within the hour. The tool has been in daily use since March.</p>
+  </div>
+</section>
+
+<!-- SLOT: meta case study, the job hunt itself. HELD, not cut. Fill when the numbers are worth showing. No issue tracks this and none should be filed. -->

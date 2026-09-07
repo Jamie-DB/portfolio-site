@@ -1,0 +1,253 @@
+/* Jamie Brown, portfolio site.
+   Two voices: serif for anything written as judgment, mono for anything that is
+   an artifact or data. Diff structure appears only where the content has a
+   change-of-state shape. Everything else is quiet prose on the same gutter. */
+
+@font-face {
+  font-family: 'Source Serif 4';
+  src: url(/fonts/source-serif-4-latin-opsz-normal.woff2) format('woff2-variations');
+  font-weight: 200 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Source Serif 4';
+  src: url(/fonts/source-serif-4-latin-opsz-italic.woff2) format('woff2-variations');
+  font-weight: 200 900;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face { font-family: 'Commit Mono'; src: url(/fonts/commit-mono-latin-400-normal.woff2) format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Commit Mono'; src: url(/fonts/commit-mono-latin-400-italic.woff2) format('woff2'); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Commit Mono'; src: url(/fonts/commit-mono-latin-500-normal.woff2) format('woff2'); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Commit Mono'; src: url(/fonts/commit-mono-latin-600-normal.woff2) format('woff2'); font-weight: 600; font-style: normal; font-display: swap; }
+/* Held in reserve for the type comparison. Not loaded unless data-mono asks for it. */
+@font-face { font-family: 'Departure Mono'; src: url(/fonts/DepartureMono-Regular.woff2) format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
+
+:root {
+  --paper: #ffffff;
+  --ink: #000000;
+  --ink-2: #6b6b6b;
+  --rule: #d9d9d9;
+  --add: #1b4bd1;
+  --add-bg: #eef3ff;
+  --del: #8e2c5a;
+  --del-bg: #fbeff5;
+  --serif: 'Source Serif 4', Charter, 'Iowan Old Style', Georgia, serif;
+  --mono: 'Commit Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  --measure: 38rem;
+  --gutter: 3rem;
+  --edge: 1.25rem;
+  --body: 1.125rem;
+  --lh: 1.55;
+  --line: calc(var(--body) * var(--lh));
+  color-scheme: light;
+}
+[data-mono="departure"] { --mono: 'Departure Mono', ui-monospace, monospace; }
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #000000;
+    --ink: #f2f2f2;
+    --ink-2: #9a9a9a;
+    --rule: #333333;
+    --add: #8aa6ff;
+    --add-bg: #0b1533;
+    --del: #e393bf;
+    --del-bg: #2a0f1d;
+    color-scheme: dark;
+  }
+}
+[data-theme="dark"] {
+  --paper: #000000;
+  --ink: #f2f2f2;
+  --ink-2: #9a9a9a;
+  --rule: #333333;
+  --add: #8aa6ff;
+  --add-bg: #0b1533;
+  --del: #e393bf;
+  --del-bg: #2a0f1d;
+  color-scheme: dark;
+}
+
+@media (max-width: 40rem) {
+  :root { --gutter: 1.75rem; --edge: 1rem; --body: 1.0625rem; }
+}
+
+/* Base */
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: var(--body);
+  line-height: var(--lh);
+  font-optical-sizing: auto;
+}
+.frame {
+  max-width: calc(var(--measure) + var(--gutter) + 2 * var(--edge));
+  margin: 0 auto;
+  padding: 1.5rem var(--edge) 4rem calc(var(--edge) + var(--gutter));
+}
+main { display: block; }
+p { margin: 0 0 1em; }
+a { color: inherit; text-decoration: underline; text-underline-offset: 0.15em; text-decoration-thickness: 1px; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+b, strong { font-weight: 600; }
+code, kbd, .mono { font-family: var(--mono); font-size: 0.9375em; }
+hr { border: 0; border-top: 1px solid var(--rule); margin: 2.5rem 0; }
+
+/* Masthead: name and nav, in the machine voice */
+.masthead {
+  font-family: var(--mono);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.5rem;
+  align-items: baseline;
+  margin-bottom: 3rem;
+}
+.masthead .name { font-weight: 600; text-decoration: none; }
+.masthead .name:hover { text-decoration: underline; }
+.site-nav { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; }
+.site-nav a { text-decoration: none; color: var(--ink-2); }
+.site-nav a:hover { color: var(--ink); text-decoration: underline; }
+.site-nav [aria-current="page"] { color: var(--ink); font-weight: 600; }
+
+/* Headings. Page titles read like a commit subject line. Section heads stay near body size. */
+h1 {
+  font-family: var(--mono);
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.4;
+  margin: 0 0 1.5rem;
+}
+h2 {
+  font-family: var(--serif);
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.35;
+  margin: 3rem 0 1rem;
+}
+h3 { font-size: 1.0625rem; font-weight: 600; margin: 2rem 0 0.75rem; }
+
+/* Lists in prose */
+ol, ul { padding-left: 1.5rem; margin: 0 0 1em; }
+li { margin-bottom: 0.5em; }
+.model { padding-left: 0; list-style: none; counter-reset: model; }
+.model li { counter-increment: model; margin-bottom: 1em; }
+.model li::before {
+  content: counter(model);
+  font-family: var(--mono);
+  font-size: 0.875rem;
+  color: var(--ink-2);
+  position: absolute;
+  margin-left: calc(-1 * var(--gutter));
+  width: var(--gutter);
+  text-align: center;
+  line-height: var(--line);
+}
+
+/* Diff structure.
+   A hunk is a section whose content has before-and-after shape. Blocks inside it
+   carry one of four roles: context (unchanged), add, del, or note (a review
+   comment, in the margin). Markers live in the gutter and carry the meaning on
+   their own. Color is the second channel, never the only one. */
+.hunk-head {
+  margin: 3.5rem 0 1rem;
+}
+.hunk-head .range {
+  font-family: var(--mono);
+  font-weight: 400;
+  font-size: 0.8125rem;
+  color: var(--ink-2);
+  white-space: nowrap;
+  margin-right: 0.75em;
+}
+.ctx, .add, .del, .note {
+  position: relative;
+  margin-left: calc(-1 * (var(--gutter) + var(--edge)));
+  padding-left: calc(var(--gutter) + var(--edge));
+}
+.add, .del { padding-top: 0.5rem; padding-bottom: 0.5rem; padding-right: var(--edge); margin-right: calc(-1 * var(--edge)); margin-bottom: 1em; }
+.add > :last-child, .del > :last-child, .note > :last-child { margin-bottom: 0; }
+.add { background: var(--add-bg); }
+.del { background: var(--del-bg); }
+.add::before, .del::before {
+  position: absolute;
+  left: var(--edge);
+  top: 0.5rem;
+  width: var(--gutter);
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 1rem;
+  line-height: var(--line);
+  font-weight: 600;
+}
+.add::before { content: '+'; color: var(--add); }
+.del::before { content: '-'; color: var(--del); }
+
+/* A note is a review comment: the human layer over the artifact. It reads as
+   marginalia, with a rule in the gutter rather than a card. */
+.note { margin-top: 1.25em; margin-bottom: 1.25em; }
+.note::before {
+  content: '';
+  position: absolute;
+  left: calc(var(--edge) + var(--gutter) / 2 - 1.5px);
+  top: 0.15em;
+  bottom: 0.15em;
+  width: 3px;
+  background: var(--ink);
+}
+.note blockquote {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+}
+.note .who {
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  color: var(--ink-2);
+  margin: 0.5em 0 0;
+}
+
+/* Meta text: dates, counts, provenance. Always mono, always quiet. */
+.meta { font-family: var(--mono); font-size: 0.8125rem; color: var(--ink-2); }
+
+/* Colophon: the last receipt on every page */
+.colophon {
+  margin-top: 5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: var(--ink-2);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 2rem;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.colophon p { margin: 0; max-width: 32rem; }
+.theme-toggle {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 1px solid var(--rule);
+  padding: 0.2em 0.6em;
+  cursor: pointer;
+}
+.theme-toggle:hover { color: var(--ink); border-color: var(--ink); }
+
+@media print {
+  :root { --paper: #fff; --ink: #000; --ink-2: #444; --rule: #999; --add-bg: #eef; --del-bg: #fee; }
+  .site-nav, .theme-toggle { display: none; }
+  .frame { padding: 0 0 0 var(--gutter); max-width: none; }
+  a { text-decoration: none; }
+  * { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+}
