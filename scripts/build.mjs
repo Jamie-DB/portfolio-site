@@ -15,8 +15,9 @@ const OUT = path.resolve(ROOT, process.env.OUT_DIR || 'dist');
 
 const SITE = {
   name: 'Jamie Brown',
-  // The pages.dev URL is a placeholder until Cloudflare assigns the real one.
-  url: (process.env.SITE_URL || 'https://jamiebrown.pages.dev').replace(/\/$/, ''),
+  // Production is the custom domain. Cloudflare sets SITE_URL; this default is
+  // what a local build and a preview deploy fall back to.
+  url: (process.env.SITE_URL || 'https://jamiebrown.engineer').replace(/\/$/, ''),
   repo: 'https://github.com/Jamie-DB/portfolio-site',
   buildlog: 'https://github.com/Jamie-DB/portfolio-site/blob/main/BUILDLOG.md',
 };
