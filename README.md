@@ -47,6 +47,7 @@ What was delegated:
 - The split view on Home and the blame gutter on the working model are desktop-only. On narrow screens the hunk stays unified and the blame note drops onto its own line.
 - The screenshot slots on the projects page and the recording slot on the working model are still empty comments.
 - The comics on the programmer-art page are numbered 3 and 4 in their source files. Numbers 1 and 2 were never exported, so the set has a gap nobody but me can see.
+- The page claims the comics were arrived at by iteration rather than selection, which is true, but the rounds themselves are in the session logs and have never been pulled out. Every other claim on this site has a receipt behind it and this one does not yet.
 
 ## What's next
 
