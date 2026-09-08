@@ -8,14 +8,14 @@ This is portfolio evidence for a job hunt, not a product. It exists so a hiring 
 
 ## How it was built: the workflow
 
-The build ran in one Claude Code session on Sep 7, 2026, inside a Conductor workspace, with me reviewing at each milestone rather than approving each action. The full story with dead ends is in [BUILDLOG.md](BUILDLOG.md).
+The build ran in one Claude Code session on Sept 7, 2026, inside a Conductor workspace, with me reviewing at each milestone rather than approving each action. The full story with dead ends is in [BUILDLOG.md](BUILDLOG.md).
 
 What I decided or corrected:
 
 - The brief, the copy, and the binding rules came from my private hub and were written before this repo existed. Copy flows one direction, hub to site. The agent read the hub and was not allowed to write to it.
 - I rejected the agent's first design proposal after asking it to grade its own work against the recognizable AI house styles. It gave itself a C+ and said why: a Tufte-style margin column, a default palette, and the "restrained monochrome" look that is its own template. The diff form replaced it.
 - The two-voices type system, serif for anything written as judgment and mono for anything that is an artifact or data, was the agent's idea. I approved it as the most important design decision on the site.
-- Red and green as the default diff colors, with a toggle to a colorblind palette, was my call and reversed the agent's colorblind-first default. The tools use red and green, and the site is about the tools.
+- The palette went back and forth, and both calls were mine. I first reversed the agent's colorblind-first default so red and green would lead, because the tools use them. After seeing both palettes side by side I reversed again: the colorblind palette of blue and plum is the default on first visit, with the standard red and green one toggle away.
 - I moved the display controls out of the footer into a fixed corner after the prototype buried them at the bottom of a long page.
 - The CV page renders from my master document rather than from the one-page CV, at my direction. I ruled out the non-engineering roles.
 - I confirmed the containment paragraph on the audit page as my actual reasoning and added a paragraph about why a tool that makes branch-per-agent the normal path is worth more than its components.
@@ -30,7 +30,6 @@ What was delegated:
 
 ## Current shortcomings
 
-- The audit tables are written in the third person in the hub's source file and the page around them is first person. Three rows show it. The fix belongs in the hub, not here.
 - The CV page is a hand-carried derivative of the master document with a clearance pass, not a generated one. When the master document changes, the carry has to be redone by hand, and nothing detects drift.
 - No automated tests beyond the contrast check and the sync script's leak check. The build script itself is untested.
 - The screen recording slot and the meta case study slot on the "How I build software now" page are empty HTML comments.
