@@ -69,4 +69,25 @@
 
   controls.hidden = false;
   render();
+
+  // Split view on the Home hunk: before and after side by side. Desktop only,
+  // the stylesheet forces unified on narrow screens. Remembered like the rest.
+  var hero = document.querySelector('.hero');
+  if (hero) {
+    var unified = hero.querySelector('.lines.unified');
+    var split = hero.querySelector('.lines.split');
+    var views = hero.querySelectorAll('[data-view]');
+    function setView(v) {
+      if (!split || !unified) return;
+      split.hidden = v !== 'split';
+      unified.hidden = v === 'split';
+      views.forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-view') === v)); });
+    }
+    var savedView = null;
+    try { savedView = localStorage.getItem('view'); } catch (e) {}
+    if (savedView) setView(savedView);
+    views.forEach(function (b) {
+      b.addEventListener('click', function () { setView(b.getAttribute('data-view')); remember('view', b.getAttribute('data-view')); });
+    });
+  }
 })();

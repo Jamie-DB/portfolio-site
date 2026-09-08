@@ -18,7 +18,7 @@
 <div class="personal">
 
 ### Personal projects
-<p class="meta"><time>2025 to present</time> Independent work, not employment. All of it built with the workflow this site describes, and three of the repos are public with build logs.</p>
+<p class="meta"><time data-short="Personal">2025 to present</time> Independent work, not employment. All of it built with the workflow this site describes, and three of the repos are public with build logs.</p>
 
 - **yt_transcript_mcp.** Swift 6 MCP server fetching YouTube transcripts through the InnerTube API. No Node, no Python. Built in a day: five phases planned before any code, then findings filed by a second agent reviewing with fresh context. 27 issues the same day, 26 closed by end of day. In-memory caching keyed by returned language after review caught the requested-language bug, offline unit tests, SSRF designed out before the network code existed, packaged for Claude Desktop. Public, in daily use. Backlog: host it online for mobile access.
 - **chordsheet.** TypeScript, Vite, and Vitest web app for play-along guitar chord sheets, 248 agent-generated tests across 17 files. The AI assist deliberately routes around copyright refusals by emitting only chord names anchored to lyrics the user already has. Monospace character-cell layout so print output is literal text rows, capo as a display transform, chord diagram voicing tables, setlists, File System Access API storage. From a one-paragraph idea to weekly rehearsal use in twelve days and 31 issues. Public.
@@ -37,7 +37,7 @@
 </div>
 
 ### Course Director, Software Engineering and UX Design
-<p class="meta"><time>Jul 2022 to Sept 2026</time> Full Sail University</p>
+<p class="meta"><time data-short="Course Director">Jul 2022 to Sept 2026</time> Full Sail University</p>
 
 Taught and maintained five courses across six course sections, three in iOS development and two in game UX design, and used the last year to rebuild all of them around AI-assisted tooling that I designed, ran, and measured.
 
@@ -81,7 +81,7 @@ Taught and maintained five courses across six course sections, three in iOS deve
 </details>
 
 ### Senior Software Engineer, Tech Lead, Visualization and Control
-<p class="meta"><time>Jan 2020 to Jun 2022</time> Luminar Technologies, remote</p>
+<p class="meta"><time data-short="Tech Lead">Jan 2020 to Jun 2022</time> Luminar Technologies, remote</p>
 
 An individual-contributor role first: hands-on engineering was at least three quarters of the job, with the team lead arc layered on top of it.
 
@@ -104,7 +104,7 @@ An individual-contributor role first: hands-on engineering was at least three qu
 </details>
 
 ### Department Chair, Mobile Development
-<p class="meta"><time>Jan 2016 to Jan 2020</time> Full Sail University</p>
+<p class="meta"><time data-short="Dept Chair">Jan 2016 to Jan 2020</time> Full Sail University</p>
 
 - Led a team of 8 to 10 software engineering instructors building and maintaining computer science curriculum for the Mobile Development bachelor's program, across 8 to 13 concurrent iOS and Android courses.
 - Managed hiring, onboarding, and performance development for the department's instructional team. Mentored junior through senior engineers on both programming and pedagogy, and directed software engineers transitioning into college instruction.
@@ -120,7 +120,7 @@ An individual-contributor role first: hands-on engineering was at least three qu
 </details>
 
 ### Course Director, iOS
-<p class="meta"><time>Jan 2014 to Jan 2016</time> Full Sail University</p>
+<p class="meta"><time data-short="Course Director">Jan 2014 to Jan 2016</time> Full Sail University</p>
 
 - Created the university's first iOS computer science curriculum in Objective-C, then rebuilt it in Swift while the language was still in beta: three programming courses and one design course overhauled and rolled out in August 2014, two months after Swift was announced.
 - One of the first collegiate Swift programs in the country. Featured on Apple's Swift educators page in 2015, alongside Stanford.
@@ -134,7 +134,7 @@ An individual-contributor role first: hands-on engineering was at least three qu
 </details>
 
 ### Co-Founder, Software Engineer, Project Manager
-<p class="meta"><time>Jun 2009 to Jan 2020</time> Category 5 Games, LLC</p>
+<p class="meta"><time data-short="Category 5">Jun 2009 to Jan 2020</time> Category 5 Games, LLC</p>
 
 A two-person studio. Full time for a little over five years, then maintenance and updates alongside a full-time career until 2020. All figures are lifetime and historical, since the titles are no longer on the stores.
 

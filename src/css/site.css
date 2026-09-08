@@ -503,3 +503,66 @@ details.fold > p:first-of-type { margin-top: 0.4rem; }
 .tag.deep { border-left-color: var(--cite); font-weight: 600; }
 .tag small { color: var(--ink-2); font-size: 0.75rem; margin-left: 0.35em; }
 .cv .personal h3::after { content: 'personal work'; font-family: var(--mono); font-size: 0.75rem; font-weight: 400; color: var(--cite); margin-left: 0.75em; vertical-align: 0.15em; }
+
+/* Author line under the PR title, and the files-changed summary above the list. */
+.pr-author { font-size: 0.8125rem; color: var(--ink-2); margin: 0 0 1rem; }
+.pr-author a { text-decoration: none; color: var(--ink-2); margin-right: 1rem; white-space: nowrap; }
+.pr-author a:hover { color: var(--ink); text-decoration: underline; }
+.files-summary { flex-basis: 100%; color: var(--ink-2); }
+
+/* Blame on the working model: which items changed since the model was
+   written, and when. In the right margin on a wide screen, on its own line
+   otherwise. */
+.model li { position: relative; }
+.model li[data-blame]::after { content: attr(data-blame); font-family: var(--mono); font-size: 0.75rem; color: var(--cite); }
+@media (min-width: 64rem) { .model li[data-blame]::after { position: absolute; left: calc(100% + 1.5rem); top: 0.35em; white-space: nowrap; } }
+@media (max-width: 63.99rem) { .model li[data-blame]::after { display: block; margin-top: 0.25rem; } }
+
+/* A view toggle on a hunk: unified or split. Desktop only. */
+.view-toggle { font-family: var(--mono); font-size: 0.75rem; margin-left: 1rem; }
+.view-toggle button { font: inherit; color: var(--ink-2); background: none; border: 1px solid var(--rule); padding: 0.1em 0.5em; cursor: pointer; }
+.view-toggle button:hover { color: var(--ink); border-color: var(--ink); }
+.view-toggle button[aria-pressed="true"] { color: var(--paper); background: var(--ink); border-color: var(--ink); }
+
+/* Split view: old on the left, new on the right, rows aligned. It breaks out
+   of the reading column because two columns need the width. */
+.lines.split { position: relative; left: 50%; transform: translateX(-50%); width: min(96vw, 64rem); margin: 0 0 1.5rem; font-size: 1rem; }
+.lines.split .row { display: grid; grid-template-columns: 1fr 1fr; gap: 0 2px; }
+.lines.split .row + .row { margin-top: 2px; }
+/* Cells reset the unified line rules (gutter margins, marker box) that the
+   shared role classes carry, so each cell stays inside its grid column. */
+.lines.split .cell { position: relative; margin: 0; padding: 0.3rem 0.75rem 0.3rem 1.75rem; min-height: 1.5em; min-width: 0; overflow-wrap: anywhere; }
+.lines.split .cell::before { position: absolute; left: 0.6rem; top: 0.3rem; width: auto; text-align: left; line-height: inherit; font-family: var(--mono); font-size: 1rem; font-weight: 600; }
+.lines.split .cell.add { background: var(--add-bg); color: var(--add-ink); }
+.lines.split .cell.add::before { content: '+'; color: var(--add); }
+.lines.split .cell.del { background: var(--del-bg); color: var(--del-ink); text-decoration: line-through; text-decoration-thickness: 1px; text-decoration-color: var(--del); }
+.lines.split .cell.del::before { content: '-'; color: var(--del); }
+.lines.split .cell.del.mod { text-decoration: none; }
+.lines.split .cell.empty { background: repeating-linear-gradient(45deg, transparent 0 6px, var(--rule) 6px 7px); }
+@media (max-width: 64rem) {
+  .view-toggle { display: none; }
+  .lines.split { display: none !important; }
+  .lines.unified { display: block !important; }
+}
+
+/* CV year ruler: one bar per commit, each a link to its entry. Bars are
+   positioned by date as a percentage of 2009 to now. */
+.ruler { margin: 0 0 2.5rem; font-family: var(--mono); font-size: 0.75rem; }
+.ruler ol { list-style: none; margin: 0; padding: 0; }
+.ruler-rows li { position: relative; height: 1.45rem; margin: 0; }
+.ruler-rows a { position: absolute; left: var(--from); width: calc(var(--to) - var(--from)); min-width: 3px; top: 0.2rem; height: 1rem; background: var(--add-bg); border-left: 2px solid var(--ink); text-decoration: none; color: var(--ink); }
+.ruler-rows a span { position: absolute; left: 100%; top: 0; line-height: 1rem; padding-left: 0.4rem; white-space: nowrap; }
+.ruler-rows a.late span { left: auto; right: 100%; padding-left: 0; padding-right: 0.4rem; }
+.ruler-rows a:hover { background: var(--add); }
+.ruler-rows a:hover span { text-decoration: underline; }
+.ruler-axis { position: relative; height: 1.5rem; border-top: 1px solid var(--rule); margin-top: 0.35rem; }
+.ruler-axis li { position: absolute; left: var(--at); top: 0.3rem; transform: translateX(-50%); color: var(--ink-2); margin: 0; }
+.ruler-axis li::before { content: ''; position: absolute; left: 50%; top: -0.55rem; height: 0.4rem; border-left: 1px solid var(--rule); }
+.ruler-axis li.now { color: var(--add); transform: translateX(-100%); }
+.ruler-axis li.now::before { left: 100%; border-color: var(--add); }
+.commit { scroll-margin-top: 1rem; }
+
+/* An artifact: a screenshot of the running thing, captioned in the machine voice. */
+.artifact { margin: 1rem 0 1.5rem; }
+.artifact img { display: block; max-width: 100%; height: auto; border: 1px solid var(--rule); }
+.artifact figcaption { font-family: var(--mono); font-size: 0.75rem; color: var(--ink-2); margin-top: 0.4rem; }

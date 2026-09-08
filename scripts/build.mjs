@@ -27,6 +27,14 @@ const STATE = {
   line: 'Senior software engineer, Orlando. Remote or hybrid preferred.',
 };
 
+// The author line under the title, the way a PR shows who opened it. Contact
+// on every page, so a reader never has to hunt for it.
+const AUTHOR = [
+  ['mailto:jamiedevinbrown@gmail.com', 'jamiedevinbrown@gmail.com'],
+  ['https://www.linkedin.com/in/jdevbrown', 'LinkedIn'],
+  ['https://github.com/Jamie-DB', 'GitHub'],
+];
+
 // Preview-only switches for side-by-side builds. Never set in production.
 const MONO = process.env.MONO || '';       // '' | 'departure'
 const THEME = process.env.THEME || '';     // '' | 'dark' | 'light'
@@ -100,18 +108,51 @@ function diffstat(html) {
   return { add: count('add'), del: count('del') };
 }
 
+function statSpan(s) {
+  const parts = [s.add ? `<span class="plus">+${s.add}</span>` : '', s.del ? `<span class="minus">-${s.del}</span>` : ''].filter(Boolean);
+  return parts.length ? ` <span class="stat">${parts.join(' ')}</span>` : '';
+}
+
 function nav(current, stats) {
-  return NAV.map((n) => {
+  const total = NAV.reduce((t, n) => {
     const s = stats[n.href] || { add: 0, del: 0 };
-    const parts = [s.add ? `<span class="plus">+${s.add}</span>` : '', s.del ? `<span class="minus">-${s.del}</span>` : ''].filter(Boolean);
-    const stat = parts.length ? ` <span class="stat">${parts.join(' ')}</span>` : '';
+    return { add: t.add + s.add, del: t.del + s.del };
+  }, { add: 0, del: 0 });
+  const summary = `<span class="files-summary">${NAV.length} files changed${statSpan(total)}</span>`;
+  return summary + '\n      ' + NAV.map((n) => {
+    const s = stats[n.href] || { add: 0, del: 0 };
+    const stat = statSpan(s);
     return n.href === current
       ? `<span aria-current="page">${esc(n.label)}${stat}</span>`
       : `<a href="${n.href}">${esc(n.label)}${stat}</a>`;
   }).join('\n      ');
 }
 
+// A split view of a hunk: old on the left, new on the right, rows aligned.
+// Context lines appear on both sides, a removal followed by an addition shares
+// a row, and a modified line shows the struck word on the left and the clean
+// line on the right. Generated from the unified lines so the two cannot drift.
+function splitView(body) {
+  const m = body.match(/<section class="hunk hero">([\s\S]*?)<div class="lines">([\s\S]*?)<\/div>\s*<\/section>/);
+  if (!m) return body;
+  const items = [...m[2].matchAll(/<p class="(ctx|add|del|mod)">([\s\S]*?)<\/p>/g)].map((x) => ({ role: x[1], html: x[2] }));
+  const rows = [];
+  for (let i = 0; i < items.length; i++) {
+    const it = items[i];
+    if (it.role === 'ctx') rows.push(['ctx', it.html, 'ctx', it.html]);
+    else if (it.role === 'mod') rows.push(['del mod', it.html, 'add', it.html.replace(/\s?<del>[\s\S]*?<\/del>/g, '')]);
+    else if (it.role === 'del' && items[i + 1] && items[i + 1].role === 'add') { rows.push(['del', it.html, 'add', items[i + 1].html]); i++; }
+    else if (it.role === 'del') rows.push(['del', it.html, 'empty', '']);
+    else rows.push(['empty', '', 'add', it.html]);
+  }
+  const split = `<div class="lines split" hidden>\n` + rows.map(([lr, lh, rr, rh]) =>
+    `  <div class="row"><div class="cell ${lr}">${lh}</div><div class="cell ${rr}">${rh}</div></div>`).join('\n') + `\n</div>`;
+  const section = m[0].replace('<div class="lines">', '<div class="lines unified">').replace(/<\/section>$/, `${split}\n</section>`);
+  return body.replace(m[0], section);
+}
+
 function layout({ meta, body }, stats, checks) {
+  body = splitView(body);
   const home = meta.path === '/';
   const title = home ? `${SITE.name}, senior software engineer` : `${meta.title} - ${SITE.name}`;
   const url = SITE.url + meta.path;
@@ -141,6 +182,7 @@ function layout({ meta, body }, stats, checks) {
     <header class="pr">
       <p class="pr-title"><a class="name" href="/">${SITE.name}</a> <span class="state open">${STATE.word}</span></p>
       <p class="pr-line">${STATE.line}</p>
+      <p class="pr-author">${AUTHOR.map(([href, text]) => `<a href="${href}">${text}</a>`).join(' ')}</p>
       <nav class="files" aria-label="Site">
       ${nav(meta.path, stats)}
       </nav>
@@ -187,17 +229,49 @@ function auditRows(rows, role, withWhen) {
 // The CV's experience entries are commits. In content/cv.md each role is an
 // h3 followed by a meta line whose <time> holds the dates. Wrap each one so
 // the stylesheet can draw the rail.
+const MONTHS = { Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5, Jul: 6, Aug: 7, Sept: 8, Sep: 8, Oct: 9, Nov: 10, Dec: 11 };
+const NOW = (() => { const d = new Date(); return d.getUTCFullYear() + d.getUTCMonth() / 12; })();
+// "Jan 2020" reads as 2020.0, "Jun 2022" as 2022.4, a bare "2025" as 2025.0.
+function yearOf(text) {
+  const m = text.match(/(?:([A-Z][a-z]+) )?(\d{4})/);
+  return m ? +m[2] + (m[1] && MONTHS[m[1]] != null ? MONTHS[m[1]] / 12 : 0) : null;
+}
+const slug = (t) => t.toLowerCase().replace(/<[^>]+>/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
+function ruler(entries) {
+  const start = Math.floor(Math.min(...entries.map((e) => e.from)));
+  const end = NOW + 0.25;
+  const pct = (y) => `${(((y - start) / (end - start)) * 100).toFixed(1)}%`;
+  const rows = entries.map((e) => {
+    const late = (e.to - start) / (end - start) > 0.85;
+    return `    <li><a href="#${e.id}" title="${esc(e.title)}" class="${late ? 'late' : ''}" style="--from:${pct(e.from)};--to:${pct(e.to)}"><span>${esc(e.short)}</span></a></li>`;
+  }).join('\n');
+  const ticks = [];
+  for (let y = Math.ceil(start / 5) * 5; y < NOW; y += 5) ticks.push(`    <li style="--at:${pct(y)}">${y}</li>`);
+  ticks.push(`    <li class="now" style="--at:${pct(NOW)}">now</li>`);
+  return `<figure class="ruler" aria-label="Timeline, ${start} to now. Each bar links to its entry below.">\n  <ol class="ruler-rows">\n${rows}\n  </ol>\n  <ol class="ruler-axis" aria-hidden="true">\n${ticks.join('\n')}\n  </ol>\n</figure>\n`;
+}
+
 function commits(html) {
+  const entries = [];
   const parts = html.split(/(?=<h3>)/);
-  return parts.map((part, i) => {
+  const out = parts.map((part, i) => {
     if (i === 0) return part;
-    const m = part.match(/^<h3>([\s\S]*?)<\/h3>\s*<p class="meta"><time>(.*?)<\/time>\s*([\s\S]*?)<\/p>/);
+    const m = part.match(/^<h3>([\s\S]*?)<\/h3>\s*<p class="meta"><time([^>]*)>(.*?)<\/time>\s*([\s\S]*?)<\/p>/);
     if (!m) return part;
+    const [, title, attrs, when, org] = m;
+    const id = slug(title);
+    const short = (attrs.match(/data-short="([^"]*)"/) || [])[1] || title;
+    const [a, bRaw = ''] = when.split(/ to /);
+    const from = yearOf(a);
+    const to = /present/.test(bRaw) ? NOW : (yearOf(bRaw) ?? from) + (/[A-Z][a-z]+ \d{4}/.test(bRaw) ? 1 / 12 : 1);
+    if (from != null) entries.push({ id, title, short, from, to });
     const rest = part.slice(m[0].length);
     const cut = rest.search(/<h2|<\/div>/);
     const [inner, after] = cut < 0 ? [rest, ''] : [rest.slice(0, cut), rest.slice(cut)];
-    return `<article class="commit">\n<p class="when">${m[2]}</p>\n<h3>${m[1]}</h3>\n<p class="meta">${m[3]}</p>${inner}</article>\n${after}`;
+    return `<article class="commit" id="${id}">\n<p class="when">${when}</p>\n<h3>${title}</h3>\n<p class="meta">${org}</p>${inner}</article>\n${after}`;
   }).join('');
+  return entries.length ? out.replace('<div class="commits">', ruler(entries) + '<div class="commits">') : out;
 }
 
 // A fold is a <details class="fold"> block. The build appends a line count to

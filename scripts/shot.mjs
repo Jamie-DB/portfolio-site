@@ -10,6 +10,10 @@ const browser = await puppeteer.launch({ executablePath: chrome, headless: true 
 const page = await browser.newPage();
 await page.setViewport({ width: Number(width), height: 900, deviceScaleFactor: 2, isMobile: Number(width) < 600, hasTouch: Number(width) < 600 });
 if (dark === 'dark') await page.emulateMediaFeatures([{ name: 'prefers-color-scheme', value: 'dark' }]);
+// PRESET="view=split,palette=standard" seeds localStorage before the page loads.
+const PRESET = process.env.PRESET || '';
+if (PRESET) await page.evaluateOnNewDocument((pairs) => { for (const [k, v] of pairs) localStorage.setItem(k, v); },
+  PRESET.split(',').map((kv) => kv.split('=')));
 await page.goto(url, { waitUntil: 'networkidle0' });
 await page.evaluate(() => document.fonts.ready);
 await page.screenshot({ path: out, fullPage: full === 'full' });
