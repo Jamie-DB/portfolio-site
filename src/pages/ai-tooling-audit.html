@@ -1,0 +1,61 @@
+---
+title: AI tooling audit
+path: /ai-tooling-audit/
+description: What I actually use, what I just adopted, and what I evaluated and skipped, with reasons. Dated, because a tooling list with no date is a claim about the present that quietly becomes a lie.
+---
+<h1>AI tooling audit</h1>
+<p class="meta">What I actually use. Last audited {{audit-date}}.</p>
+
+<h2>Before November 2025 I did not let an agent write code.</h2>
+
+<p>Not as a position. As a verdict, and a narrower one than it sounds. They were already very good at the things around the code: learning something new, documentation, discovery, and getting close enough to the right answer that a good programmer could tap it in from there, especially if you were disciplined about working in small hunks. What none of them were worth yet was the cost of checking code they had written on their own.</p>
+
+<p>Opus 4.5 was the first model I would let actually work, and even then I kept it on manual mode for most of it, approving each action rather than turning it loose. From 4.7 on, I review instead. The agent works and I check the output.</p>
+
+<p>What changed there is worth being precise about, because it is easy to read as me relaxing. The verification did not go away. It changed granularity. Manual mode was checking every action. Review is checking every outcome. What moved was where the check is cheapest to apply, not whether one happens.</p>
+
+<p>What let me get there was not only better models. It was containment. I run each agent in its own branch and workspace now, so it can work as hard as it likes and nothing reaches the real branch until I have passed it. Per-action approval is what you do when the blast radius is your working tree. Review is what you can afford once a bad run is something you can throw away.</p>
+
+<p>None of that is new technology. Branches and worktrees have been there the whole time. The combination of that workflow with agents that grew more capable and more trustworthy over time hit a tipping point.</p>
+
+<p>That is the whole of my position on these tools, and it is why this page exists. Everything below earned its place or lost it on the same standard.</p>
+
+<!-- SLOT: link to the LinkedIn article that carries the full-length adoption-curve argument, once it is published (hub issue #34). -->
+
+<section class="hunk">
+  <h2 class="hunk-head"><span class="range">@@ unchanged @@</span>Use daily</h2>
+{{audit-daily}}
+</section>
+
+<section class="hunk">
+  <h2 class="hunk-head"><span class="range">@@ added @@</span>Just adopted</h2>
+{{audit-adopted}}
+</section>
+
+<section class="hunk">
+  <h2 class="hunk-head"><span class="range">@@ removed @@</span>Evaluated and skipped</h2>
+  <p>These share a shape: each tool demoed well and failed on the specific work. A tool that is right most of the time is not the same as a tool that is ready, and where it goes wrong matters more than how often. A voice model that is right 98 percent of the time fails hardest exactly where the technical terms are.</p>
+{{audit-skipped}}
+</section>
+
+<h2>Where AI assistance stops</h2>
+
+<p>I reviewed the AI animation tool landscape for the game I am building and did not find anything viable. A few looked able to generate spritesheets from art you give them to learn from, and probably some simple animations. But that game needs unique animations to feel like anything. If every character on screen has the same walk, or the same attack regardless of what they are holding, it feels flat.</p>
+
+<p>That is where the tools were when I looked, not where they will stay. The space moves fast and my radar is up, so I expect to run this evaluation again.</p>
+
+<p>That is exactly what AI in creative work can squash. No one cares if AI wrote the audio manager. Everyone cares if the game feels bland and same-y.</p>
+
+<p>This site is the same argument turned on itself. You do not care that it was stood up with Claude Code, and the footer on every page says so. What would feel off is if I had stopped there.</p>
+
+<p>I pushed past the first good idea, guarded the design against Claude-ness, the house look an AI reaches for when nobody pushes back, and took a polish cloth to every section over several passes. That is the part that makes it mine.</p>
+
+<p>So the line I draw is not about the category, it is about the output. Where something only has to be correct, help is close to free. Where it has to be distinctive to work at all, the same help costs me the thing I was making.</p>
+
+<p>To be fair to the AI tools, they were not even the strongest option. Animation libraries like Mixamo could arguably do better than the AI could at the time, which made the whole comparison a bit moot. I turned those down too. A library hands the same motion to a hundred different entities and you end up in exactly the same place.</p>
+
+<p>And I hold myself to this before I hold it against anyone's tool. Months earlier I turned down sharing one skeleton across every unit, which is standard practice, entirely workable, and has nothing to do with AI. It would have made everything move the same way. Same objection, three times, and only one of the three was about AI.</p>
+
+<div class="unresolved">
+  <p>One honest caveat, because this page is not worth much if I only put the flattering half on it. The animations still are not finished. The choice I am describing is the slow one and I have not paid for it yet. Maybe there is a point about AI I am still learning here. A game with unique animations that never ships is worth less than a game with same-y animations that does, and I have picked a side without yet proving it was the right one. The open question I actually enjoy is which lands first: me shipping hand-made animations, or AI catching up to this use case before I get there. I do not know, and I want to find out.</p>
+</div>
