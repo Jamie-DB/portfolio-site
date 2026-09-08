@@ -1,4 +1,4 @@
-<!-- Carried across from the hub's data/master-document.md on Sep 7, 2026, with a
+<!-- Carried across from the hub's data/master-document.md on Sept 7, 2026, with a
      clearance pass against the site's binding rules. Facts change in the master
      document first and get re-carried here. Sections map to the master document:
      Experience to section 2, the catalog to 3, Skills to 4, Teaching to 6,
@@ -10,9 +10,9 @@
 <div class="commits">
 
 <article class="commit head">
-<p class="when">Sep 2026</p>
+<p class="when">Sept 2026</p>
 <h3>Open to the next role</h3>
-<p class="meta">Remote. AI-augmented engineering, C-family systems and backend, Unity and simulation.</p>
+<p class="meta">Remote or hybrid preferred. AI-augmented engineering, C-family systems and backend, Unity and simulation.</p>
 </article>
 
 ### Course Director, Software Engineering and UX Design
@@ -57,9 +57,9 @@ Taught and maintained five courses across six course sections: three in iOS deve
 
 An individual-contributor role first: hands-on engineering was at least three quarters of the job, with the team lead arc layered on top of it.
 
-- Led a 7-person visualization team of senior and staff engineers building real-time LiDAR visualization and control software in C++, C#, and Unity for production autonomous driving hardware, the Iris sensor, while shipping code daily.
+- Tech Lead on a 7-person visualization team of senior and staff engineers building real-time LiDAR visualization and control software in C++, C#, and Unity for production autonomous driving hardware, the Iris sensor, while shipping code daily.
 - Progressed from individual contributor to Tech Lead responsible for stakeholder alignment across several automotive OEM engineering teams. Primary technical liaison for Volvo, Toyota, and SAIC, and the contact point for all technical discussion between the visualization team and the larger organization.
-- Led a distributed team of engineers and contractors through sprint planning, code review, and delivery on a hardware-coupled product with no room for latency or instability.
+- Ran sprint planning, code review, and delivery with a distributed group of engineers and contractors on a hardware-coupled product with no room for latency or instability.
 - Designed and maintained high-performance real-time simulation and visualization software for point cloud and machine learning data supporting LiDAR hardware and autonomous driving software.
 - Optimized Unity rendering for low-latency performance: Job System and Burst, compute and geometry shaders, stencil and depth buffers, render-to-texture, custom frustum construction and slicing, GLSL.
 - C++ and C# interop at the driver, build, and marshalling layers: P/Invoke, struct alignment across the managed boundary, native object wrappers and dispose lifecycle. Build tooling in CMake, vcpkg, Conan, Jenkins, and Docker across Linux and Windows.
@@ -105,12 +105,12 @@ A two-person studio. Full time for a little over five years, then maintenance an
 <p class="meta"><time>2025 to present</time> Personal projects, all built with the workflow this site describes</p>
 
 - **yt_transcript_mcp.** Swift 6 MCP server fetching YouTube transcripts through the InnerTube API. No Node, no Python. Built in a day: five phases planned before any code, then findings filed by a second agent reviewing with fresh context. 27 issues the same day, 26 closed by end of day. In-memory caching keyed by returned language after review caught the requested-language bug, offline unit tests, SSRF designed out before the network code existed, packaged for Claude Desktop. Public, in daily use. Backlog: host it online for mobile access.
-- **chordsheet.** TypeScript, Vite, and Vitest web app for play-along guitar chord sheets, 248 tests across 17 files. The AI assist deliberately routes around copyright refusals by emitting only chord names anchored to lyrics the user already has. Monospace character-cell layout so print output is literal text rows, capo as a display transform, chord diagram voicing tables, setlists, File System Access API storage. From a one-paragraph idea to weekly rehearsal use in twelve days and 31 issues. Public.
-- **history-heatmap.** Historical population-dynamics visualization engine, AD 33 to the present, in one self-contained HTML file with no server and no dependencies. An analytical gaussian heat field evaluated per viewport at constant cost, mass-conserving anti-aliasing for city-scale overlays, a hybrid model blending hand-curated anchor data with logistic growth and diffusion, a non-linear timeline, city lifecycle animations as pure functions of the playhead, provenance tiers, deep links. The current Christianity and Islam dataset is the first lens, with more population types planned. The dataset is unaudited, and the README says so. Public, with a live demo.
+- **chordsheet.** TypeScript, Vite, and Vitest web app for play-along guitar chord sheets, 248 agent-generated tests across 17 files. The AI assist deliberately routes around copyright refusals by emitting only chord names anchored to lyrics the user already has. Monospace character-cell layout so print output is literal text rows, capo as a display transform, chord diagram voicing tables, setlists, File System Access API storage. From a one-paragraph idea to weekly rehearsal use in twelve days and 31 issues. Public.
+- **history-heatmap.** Historical population-dynamics visualization engine, AD 33 to the present, in one self-contained HTML file with no server and no dependencies. An analytical gaussian heat field evaluated per viewport at constant cost, mass-conserving anti-aliasing for city-scale overlays, a hybrid model blending hand-curated anchor data with logistic growth and diffusion, a non-linear timeline, city lifecycle animations as pure functions of the playhead, provenance tiers, deep links. Built out of an interest in how ideas spread and which ones last, which is why the first dataset is Christianity and Islam rather than a subject in its own right. More population categories are planned. The dataset is unaudited, and the README says so. Public, with a live demo.
 - **magenta_pipeline.** Three-phase art recovery pipeline resurrecting legacy sprite sheets for the reboot below: Photoshop JSX automation, then Python and OpenCV (HSV-space masking to isolate flattened magenta overlays, and nearest-neighbor fill via distance transform to reconstruct the art underneath, after Navier-Stokes inpainting was tried and replaced), PSB write-back, then mask flattening because Unity's PSD importer silently skips masked layers. Independently runnable stages, batch mode, a threshold tuning tool. Private.
 - **Warmongers reboot.** Rebuilding the 2012 title in Unity with Git and LFS, Claude Code as the primary development accelerator, and a Unity asset postprocessor enforcing canonical sprite import settings. The design corpus is versioned like code. Private, in progress.
 - **Course platform, May to Aug 2026.** The static, no-build site that served the two game UX courses to live cohorts: self-contained HTML pages per lesson, a hub with tabbed weeks, a gate with a maintenance switch. 85 commits. Offline since departure.
-- **AI workflow infrastructure.** Claude Code as the daily driver with an orchestrator-plus-subagents pattern, custom slash commands, hooks, and CLAUDE.md discipline. An always-on agent on a dedicated M1 Pro with 32GB running Qwen through Ollama for bulk work and the Claude API for reasoning, on a 60/30/10 cost rule.
+- **AI workflow infrastructure.** Claude Code as the daily driver with an orchestrator-plus-subagents pattern, custom slash commands, hooks, and CLAUDE.md discipline. A frontier model orchestrates and cheaper models do the mechanical work, on a 60/30/10 cost rule.
 
 </div>
 
@@ -126,7 +126,7 @@ A two-person studio. Full time for a little over five years, then maintenance an
 | AI grading pipeline | 2025 to 2026 | Production, own sections | Six sections, 70+ feedback documents, longitudinal tracking | Claude Code slash commands, database-backed via MCP, evaluation personas |
 | yt_transcript_mcp | 2026 | Claude Code, Claude Desktop | Built in a day, 27-issue review trail, daily use | Swift 6, SPM, InnerTube API |
 | magenta_pipeline | 2026 | CLI, Photoshop, Unity | Recovers legacy sprite sheets for the reboot | Python, OpenCV, psd-tools, JSX |
-| chordsheet | 2026 | Web | 248 tests, issue-driven | TypeScript, Vite, Vitest |
+| chordsheet | 2026 | Web | 248 agent-generated tests, issue-driven | TypeScript, Vite, Vitest |
 | Course site | 2026 | Static web | 85 commits, served live cohorts May to Aug | HTML, CSS, Cloudflare |
 | Annual review site | 2026 | Cloudflare Pages | Six linked documents | HTML, CSS, wrangler |
 | history-heatmap | 2026 | Web, single file | 20 commits in six days, hybrid history and simulation model | Vanilla JS, HTML, zero dependencies |
@@ -148,11 +148,11 @@ Tiers are honest. Anything listed as familiar or explored is not being claimed a
 
 **Architecture patterns worth naming.** Data model, visualizer, and visualizer-controller separation with events in both directions. Set-and-notify-on-change properties. A facade per sensor type behind a common control client. Manager and registry classes owning known-entity lists and notifying subscribers. Preprocessor-directive scene variants, used first at Category 5 to serve one codebase to iOS, Android, Amazon, and the editor, and again at Luminar for a sensor-only build.
 
-**AI-augmented development.** Before November 2025, no agent wrote code, because none had earned it. Opus 4.5 was the first allowed to, on manual mode. From 4.7 on, review replaced per-action approval. Claude Code daily: custom slash commands, agents, CLAUDE.md discipline, hooks, headless patterns. Orchestration: a frontier orchestrator with cheaper subagents, fresh-context reviewer loops, multi-agent consensus, prompt contracts. MCP: built a Swift MCP server, plus heavy database-backed MCP integration work. Local and hybrid: an always-on agent on dedicated hardware, Ollama-hosted Qwen, 60/30/10 cost-tiered routing, context management patterns. Evaluation design: rubric-aware batch evaluation, discipline-specific personas, longitudinal feedback. Governance: FERPA, RSI, 34 CFR 600.2, ACCSC, and Florida SB 482 compliance mapping, BAA and enterprise procurement paths, a five-year institutional roadmap.
+**AI-augmented development.** Used LLMs daily for the work around the code well before letting one write it. Opus 4.5 was the first I handed the keyboard to, and even then on manual mode. From 4.7 on, review replaced per-action approval. Claude Code daily: custom slash commands, agents, CLAUDE.md discipline, hooks, headless patterns. Orchestration: a frontier orchestrator with cheaper subagents, fresh-context reviewer loops, multi-agent consensus, prompt contracts. MCP: built a Swift MCP server, plus heavy database-backed MCP integration work. Cost and context: 60/30/10 cost-tiered routing, context management patterns. Evaluation design: rubric-aware batch evaluation, discipline-specific personas, longitudinal feedback. Governance: FERPA, RSI, 34 CFR 600.2, ACCSC, and Florida SB 482 compliance mapping, BAA and enterprise procurement paths, a five-year institutional roadmap.
 
 **Tools and process.** git including LFS, Jira, Plastic SCM, SAFe Agile, CMake, Conan, Docker, Jenkins, Xcode, Figma, database API and schema design, Supabase, Cloudflare Pages and wrangler, UML, RESTful APIs.
 
-**Leadership and communication.** Led a 7-person senior and staff engineering team and an 8 to 10 person instructor team. Customer-facing technical liaison for Volvo, Toyota, and SAIC. Twelve years explaining hard technical ideas to people who did not already agree, with a written feedback record of 70+ documents in a single cohort. Regulatory writing that quotes federal code accurately.
+**Leadership and communication.** Tech Lead on a 7-person senior and staff engineering team, and led an 8 to 10 person instructor team. Customer-facing technical liaison for Volvo, Toyota, and SAIC. Twelve years explaining hard technical ideas to people who did not already agree, with a written feedback record of 70+ documents in a single cohort. Regulatory writing that quotes federal code accurately.
 
 ## Teaching and curriculum record
 

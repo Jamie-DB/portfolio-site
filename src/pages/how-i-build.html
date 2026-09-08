@@ -8,11 +8,11 @@ description: AI has collapsed the cost of building. It has not collapsed the cos
 <h2>Working model</h2>
 
 <ol class="model">
-  <li><b>Direction first, in my head.</b> Planning, data, and design happen before a repo exists. I use LLMs to distill that direction into design-ready documentation with the reasoning, rules, and findings attached. Code comes third. The direction is never delegated. The distillation is.</li>
+  <li><b>Direction first, in my head.</b> Planning, data, and design happen before a repo exists. I use LLMs to distill that direction into design-ready documentation with the reasoning, rules, and findings attached. Code comes third. Holding the direction is mine. Originating it is not always: with the right context and enough pushback, the start, the middle or the end of a genuinely good idea often comes from the agent. <span class="prose-key">What stays with me is deciding which ones survive.</span></li>
   <li><b>What I delegate.</b> Generation and mechanical breadth. Drafts, scaffolds, migrations, bulk edits, and the second opinion I would otherwise never get working alone.</li>
   <li><b>What I never delegate.</b> Whether the thing is right. Architecture calls, taste calls, and the decision that something is done stay with me, including the times the agent's answer is technically correct.</li>
   <li><b>How I verify.</b> A second agent with fresh context reviews the first one's work and files findings as issues instead of applying silent fixes. I arbitrate. Nothing merges on an agent's own say-so, and failures get written down the same day they happen, while the reasoning is still recoverable.</li>
-  <li><b>The standard.</b> AI has collapsed the cost of building. It has not collapsed the cost of verifying, and the gap between those two is where ready lives now. Ready means checked, not generated.</li>
+  <li><b>The standard.</b> <span class="prose-key">AI has collapsed the cost of building. It has not collapsed the cost of verifying</span>, and the gap between those two is where ready lives now. Ready means evaluated, not generated.</li>
 </ol>
 
 <!-- SLOT: 2-minute narrated screen recording embeds here. Jamie records it after launch. Ship without it. -->
@@ -20,66 +20,107 @@ description: AI has collapsed the cost of building. It has not collapsed the cos
 <section class="hunk">
   <h2 class="hunk-head"><span class="range">@@ case study 1 @@</span>The scan you run before the irreversible thing<span class="state resolved">resolved</span></h2>
 
-  <p class="ctx"><b>Situation.</b> One of my repos was a single command from going public, and my personal song library was sitting in it, 47 files that could not ship in a public repo. A history rewrite was staged to strip them out of every commit and main was ready to force push.</p>
+  <ul class="receipts">
+    <li><span class="n">47</span> files at risk</li>
+    <li><span class="n">3</span> stale branches</li>
+    <li>caught before the rewrite ran</li>
+  </ul>
 
-  <p class="ctx"><b>What the pre-flip scan turned up.</b> Three branches were still sitting on the remote, left behind by pull requests that had been rebase-merged rather than merged. Force pushing main alone would have left all three pointing at the old, unrewritten history. Flipping the repo to public would have published all 47 files anyway, out of branches nobody was looking at.</p>
+  <p class="role">situation</p>
 
-  <p class="ctx">The plan was correct as far as it went. It went one branch short. Nothing was going to volunteer that, because everything about the main-branch rewrite was right, and the flip would have looked clean.</p>
+  <p class="ctx">One of my repos was a single command from going public, and my personal song library was sitting in it, <span class="prose-key">47 files that could not ship in a public repo</span>. A history rewrite was staged to strip them out of every commit and main was ready to force push.</p>
+
+  <p class="role">what the pre-flip scan turned up</p>
+
+  <p class="ctx">Three branches were still sitting on the remote, left behind by pull requests that had been rebase-merged rather than merged. <span class="prose-key">Force pushing main alone would have left all three pointing at the old, unrewritten history.</span> Flipping the repo to public would have published all 47 files anyway, out of branches nobody was looking at.</p>
+
+  <p class="ctx">The plan was correct as far as it went. <span class="prose-key">It went one branch short.</span> Nothing was going to volunteer that, because everything about the main-branch rewrite was right, and the flip would have looked clean.</p>
 
   <div class="add">
-    <p><b>Result.</b> Caught before the rewrite ran, so it cost nothing. That scan is now step two of a written flip procedure, and every repo I have made public since has run it. The general version: on an action you cannot take back, the interesting work is the scan you run before it, not the command itself. It is also why I merge with merge commits instead of rebasing, which is the rule that would have prevented the whole situation and had not been followed.</p>
+    <p class="role">result</p>
+    <p>Caught before the rewrite ran, so it cost nothing. That scan is now step two of a written flip procedure, and every repo I have made public since has run it. The general version: <span class="prose-key">on an action you cannot take back, the interesting work is the scan you run before it, not the command itself</span>. It is also why I merge with merge commits instead of rebasing, which is the rule that would have prevented the whole situation and had not been followed.</p>
   </div>
 </section>
 
 <section class="hunk">
   <h2 class="hunk-head"><span class="range">@@ case study 2 @@</span>Overruling the thing I asked for an hour earlier<span class="state resolved">resolved</span></h2>
 
-  <p class="ctx"><b>Situation.</b> Section dynamics marks had just shipped in my chord sheet app with tinted section backgrounds, built exactly as I specified an hour before.</p>
+  <ul class="receipts">
+    <li><span class="n">12</span> days to rehearsal use</li>
+    <li><span class="n">31</span> issues</li>
+    <li><span class="n">1</span> hour before I overruled myself</li>
+  </ul>
 
-  <p class="ctx"><b>What I said:</b></p>
+  <p class="role">situation</p>
+
+  <p class="ctx">Section dynamics marks had just shipped in my chord sheet app with tinted section backgrounds, <span class="prose-key">built exactly as I specified an hour before</span>.</p>
+
+  <p class="role">what I said</p>
 
   <div class="note">
     <blockquote>New tact. no background color, it's too busy. How about just tags, and side-bar markings. Is a section is marked tacet, let's play with reducing the font of the words and chords by about 33% so that section tightens up and moves out of the way, but is still followable on a music stand.</blockquote>
     <p class="who">Jamie Brown, in session</p>
   </div>
 
-  <p class="ctx">The judgment is in the last clause. This artifact gets read at arm's length, mid-song, on a music stand. Working correctly was never the bar.</p>
+  <p class="ctx">The judgment is in the last clause. This artifact gets read at arm's length, mid-song, on a music stand. <span class="prose-key">Working correctly was never the bar.</span></p>
 
   <div class="add">
-    <p><b>Result.</b> Tag pills, a print sidebar with a thin edge bar, and tacet sections at two-thirds size. The tinted version lasted about an hour. That app went from a one-paragraph idea to weekly rehearsal use over twelve days and 31 issues, and it is still the tool I actually play from.</p>
+    <p class="role">result</p>
+    <p>Tag pills, a print sidebar with a thin edge bar, and tacet sections at two-thirds size. <span class="prose-key">The tinted version lasted about an hour.</span> That app went from a one-paragraph idea to weekly rehearsal use over twelve days and 31 issues, and it is still the tool I actually play from.</p>
   </div>
 </section>
 
 <section class="hunk">
   <h2 class="hunk-head"><span class="range">@@ case study 3 @@</span>Killing my own headline algorithm<span class="state resolved">resolved</span></h2>
 
-  <p class="ctx"><b>Situation.</b> A recovery pipeline had to pull legacy sprite art out from under a flattened magenta overlay, and the method named in my own spec was OpenCV Navier-Stokes inpainting.</p>
+  <ul class="receipts">
+    <li><span class="n">3</span> methods tried</li>
+    <li><span class="n">1</span> shipped, the boring one</li>
+    <li><span class="n">5</span> months on, still explainable</li>
+  </ul>
 
-  <p class="ctx"><b>From the findings issue I wrote during the build:</b></p>
+  <p class="role">situation</p>
+
+  <p class="ctx">A recovery pipeline had to pull legacy sprite art out from under a flattened magenta overlay, and <span class="prose-key">the method named in my own spec was OpenCV Navier-Stokes inpainting</span>.</p>
+
+  <p class="role">from the findings issue I wrote during the build</p>
 
   <div class="note">
     <blockquote>even with mask dilation and post-scrub passes, it kept producing artifacts. Replaced entirely.</blockquote>
     <p class="who">Jamie Brown, findings issue</p>
   </div>
 
-  <p class="ctx">Inpainting samples from neighboring pixels, including the magenta-tinted ones, so it spreads the contamination it was there to remove. It had already survived one fix and one rework before I accepted that. I also tried a closed-form un-blend, which is correct algebra and still failed: dividing by (1-t) amplifies the green channel, and the alpha estimate is not precise enough for the error to cancel, so every mask edge grew a green fringe.</p>
+  <p class="ctx">Inpainting samples from neighboring pixels, including the magenta-tinted ones, so <span class="prose-key">it spreads the contamination it was there to remove</span>. It had already survived one fix and one rework before I accepted that. I also tried a closed-form un-blend, which is correct algebra and still failed: dividing by (1-t) amplifies the green channel, and the alpha estimate is not precise enough for the error to cancel, so every mask edge grew a green fringe.</p>
 
   <div class="add">
-    <p><b>Result.</b> Nearest-neighbor fill via a distance transform. The boring method won on visual ground truth. Both failures went into the findings issue the same day they happened, which is the only reason I can explain them now, five months on, with the build transcripts long since gone.</p>
+    <p class="role">result</p>
+    <p>Nearest-neighbor fill via a distance transform. <span class="prose-key">The boring method won on visual ground truth.</span> Both failures went into the findings issue the same day they happened, which is the only reason I can explain them now, five months on, with the build transcripts long since gone.</p>
   </div>
 </section>
 
 <section class="hunk">
   <h2 class="hunk-head"><span class="range">@@ case study 4 @@</span>Making the reviewer someone else<span class="state resolved">resolved</span></h2>
 
-  <p class="ctx"><b>Situation.</b> A one-day solo build of a Swift MCP server that turns YouTube videos into text I can act on immediately.</p>
+  <ul class="receipts">
+    <li><span class="n">27</span> issues on the build day</li>
+    <li><span class="n">17</span> review findings</li>
+    <li><span class="n">26</span> closed by the end of it</li>
+    <li><span class="n">1</span> day</li>
+  </ul>
 
-  <p class="ctx"><b>What I did.</b> Two agent sessions ran at once: one building, one reviewing from the same directory with fresh context, filing every finding as a GitHub issue instead of applying a silent fix. An agent reviewing its own work argues for it. An agent that has never seen the work does not.</p>
+  <p class="role">situation</p>
 
-  <p class="ctx">The catch that justifies the setup: the in-memory cache keyed transcripts by the language the caller requested. With fallback behavior, asking for Spanish on an English-only video returns English and stores it under "es," poisoning every later lookup for that video. Everything appears to work, which is exactly how that class of bug ships.</p>
+  <p class="ctx">A one-day solo build of a Swift MCP server that turns YouTube videos into text I can act on immediately.</p>
+
+  <p class="role">what I did</p>
+
+  <p class="ctx">Two agent sessions ran at once: one building, one reviewing from the same directory with fresh context, <span class="prose-key">filing every finding as a GitHub issue instead of applying a silent fix</span>. An agent reviewing its own work argues for it. An agent that has never seen the work does not.</p>
+
+  <p class="ctx">The catch that justifies the setup: the in-memory cache keyed transcripts by the language the caller requested. With fallback behavior, asking for Spanish on an English-only video returns English and stores it under "es," poisoning every later lookup for that video. <span class="prose-key">Everything appears to work, which is exactly how that class of bug ships.</span></p>
 
   <div class="add">
-    <p><b>Result.</b> 27 issues on the build day, 17 of them review findings, 26 closed by the end of it, and a review trail anyone can read. The cache fix landed within the hour. The tool has been in daily use since March.</p>
+    <p class="role">result</p>
+    <p>27 issues on the build day, 17 of them review findings, 26 closed by the end of it, and <span class="prose-key">a review trail anyone can read</span>. The cache fix landed within the hour. The tool has been in daily use since March.</p>
   </div>
 </section>
 

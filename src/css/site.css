@@ -36,6 +36,11 @@
   --cb-add: #1b4bd1; --cb-add-bg: #eef3ff; --cb-add-ink: #12379e; --cb-del: #8e2c5a; --cb-del-bg: #fbeff5; --cb-del-ink: #6e1f45;
   --add: var(--rg-add); --add-bg: var(--rg-add-bg); --add-ink: var(--rg-add-ink);
   --del: var(--rg-del); --del-bg: var(--rg-del-bg); --del-ink: var(--rg-del-ink);
+  /* Receipt hue. Evidence only: dates, counts, repo links. Always mono, never
+     inside a tinted block, so it cannot be read as a diff line. It swaps with
+     the palette so it stays separable from add and del either way. */
+  --rg-cite: #1b4bd1; --cb-cite: #7a5200;
+  --cite: var(--rg-cite);
   --serif: 'Source Serif 4', Charter, 'Iowan Old Style', Georgia, serif;
   --mono: 'Commit Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   --measure: 38rem;
@@ -49,6 +54,7 @@
 [data-palette="colorblind"] {
   --add: var(--cb-add); --add-bg: var(--cb-add-bg); --add-ink: var(--cb-add-ink);
   --del: var(--cb-del); --del-bg: var(--cb-del-bg); --del-ink: var(--cb-del-ink);
+  --cite: var(--cb-cite);
 }
 [data-mono="departure"] { --mono: 'Departure Mono', ui-monospace, monospace; }
 
@@ -60,6 +66,7 @@
     --rule: #333333;
     --rg-add: #6fd18a; --rg-add-bg: #0d2616; --rg-add-ink: #8fe0a5; --rg-del: #f28b82; --rg-del-bg: #2c1210; --rg-del-ink: #f5a09a;
     --cb-add: #8aa6ff; --cb-add-bg: #0b1533; --cb-add-ink: #a3b8ff; --cb-del: #e393bf; --cb-del-bg: #2a0f1d; --cb-del-ink: #eaa6cc;
+    --rg-cite: #8fb0ff; --cb-cite: #e0a83c;
     color-scheme: dark;
   }
 }
@@ -70,6 +77,7 @@
   --rule: #333333;
   --rg-add: #6fd18a; --rg-add-bg: #0d2616; --rg-add-ink: #8fe0a5; --rg-del: #f28b82; --rg-del-bg: #2c1210; --rg-del-ink: #f5a09a;
   --cb-add: #8aa6ff; --cb-add-bg: #0b1533; --cb-add-ink: #a3b8ff; --cb-del: #e393bf; --cb-del-bg: #2a0f1d; --cb-del-ink: #eaa6cc;
+  --rg-cite: #8fb0ff; --cb-cite: #e0a83c;
   color-scheme: dark;
 }
 
@@ -176,7 +184,7 @@ li { margin-bottom: 0.5em; }
   white-space: nowrap;
   margin-right: 0.75em;
 }
-.ctx, .add, .del, .note {
+.ctx, .add, .del, .mod, .note {
   position: relative;
   margin-left: calc(-1 * (var(--gutter) + var(--edge)));
   padding-left: calc(var(--gutter) + var(--edge));
@@ -185,7 +193,7 @@ li { margin-bottom: 0.5em; }
 .add > :last-child, .del > :last-child, .note > :last-child { margin-bottom: 0; }
 .add { background: var(--add-bg); color: var(--add-ink); }
 .del { background: var(--del-bg); color: var(--del-ink); }
-.add::before, .del::before {
+.add::before, .del::before, .mod::before {
   position: absolute;
   left: var(--edge);
   top: 0.5rem;
@@ -199,6 +207,27 @@ li { margin-bottom: 0.5em; }
 .add::before { content: '+'; color: var(--add); }
 .del::before { content: '-'; color: var(--del); }
 
+/* A modified line. What changed is a word, not the line, so the marker is ~ and
+   the strike lands only on the part that went. This is what a word-level diff
+   shows, and it is the honest form when the practice stayed and only the
+   restriction on it was dropped. */
+.mod::before { content: '~'; color: var(--ink-2); font-weight: 400; }
+del {
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--del);
+  color: var(--del-ink);
+}
+
+/* A removed line is struck, the way a prose diff marks one. The strike lands on
+   the thing that was removed and not on the reasoning for removing it, so the
+   audit's why column stays readable while its tool name reads as struck. */
+.lines > .del:not(.row), .rows .row.del dt {
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--del);
+}
+
 /* A note is a review comment: the human layer over the artifact. It reads as
    marginalia, with a rule in the gutter rather than a card. */
 .note { margin-top: 1.25em; margin-bottom: 1.25em; }
@@ -209,7 +238,7 @@ li { margin-bottom: 0.5em; }
   top: 0.15em;
   bottom: 0.15em;
   width: 3px;
-  background: var(--ink);
+  background: var(--cite);
 }
 .note blockquote {
   margin: 0;
@@ -220,12 +249,56 @@ li { margin-bottom: 0.5em; }
 .note .who {
   font-family: var(--mono);
   font-size: 0.8125rem;
-  color: var(--ink-2);
+  color: var(--cite);
   margin: 0.5em 0 0;
 }
 
 /* Meta text: dates, counts, provenance. Always mono, always quiet. */
 .meta { font-family: var(--mono); font-size: 0.8125rem; color: var(--ink-2); }
+.meta b, .meta .n { color: var(--cite); font-weight: 600; }
+
+/* Role labels. A case study has diff shape: the context, the human note, the
+   result. The label names which one you are about to read, in the machine
+   voice, so the paragraph under it can stay plain prose. It replaces the bold
+   run-in that made every block open the same way. */
+.role {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.6;
+  color: var(--ink-2);
+  margin: 1.75rem 0 0.35rem;
+}
+.role::before { content: '// '; color: var(--ink-2); }
+.add > .role { color: var(--add); margin-top: 0; }
+.del > .role { color: var(--del); margin-top: 0; }
+.add > .role::before, .del > .role::before { content: none; }
+
+/* Receipts. Every number on this site traces to something you can go check, so
+   the figures get the cite hue and the words around them stay quiet. Mono, and
+   never inside a tinted block, so a receipt cannot be misread as a diff line. */
+.receipts {
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  line-height: 1.7;
+  color: var(--ink-2);
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 1.5rem;
+}
+.receipts li { margin: 0; }
+.receipts .n { color: var(--cite); font-weight: 600; white-space: nowrap; }
+.receipts.stack { display: block; max-width: 32rem; }
+.receipts.stack li { margin-bottom: 0.15em; }
+.hunk-head + .receipts { margin-top: -0.5rem; }
+
+/* Key clause. One phrase a paragraph at most, and only the load-bearing one.
+   It is the same ink, heavier, so a reader skimming the page still lands on
+   the sentence that carries the point. */
+.prose-key { font-weight: 600; }
 
 /* Colophon: the last receipt on every page */
 .colophon {
@@ -265,14 +338,14 @@ li { margin-bottom: 0.5em; }
 @media (max-width: 40rem) { .controls .more { display: none; } }
 
 /* Consecutive lines of a hunk form one block, each changed line with its own marker. */
-.lines > .add, .lines > .del, .lines > .ctx { margin-bottom: 0; padding-top: 0.3rem; padding-bottom: 0.3rem; }
+.lines > .add, .lines > .del, .lines > .ctx, .lines > .mod { margin-bottom: 0; padding-top: 0.3rem; padding-bottom: 0.3rem; }
 .lines > :first-child { padding-top: 0.6rem; }
 .lines > :last-child { padding-bottom: 0.6rem; margin-bottom: 1.5rem; }
-.lines > .add::before, .lines > .del::before { top: 0.3rem; }
-.lines > .add:first-child::before, .lines > .del:first-child::before { top: 0.6rem; }
+.lines > .add::before, .lines > .del::before, .lines > .mod::before { top: 0.3rem; }
+.lines > .add:first-child::before, .lines > .del:first-child::before, .lines > .mod:first-child::before { top: 0.6rem; }
 
 @media print {
-  :root { --paper: #fff; --ink: #000; --ink-2: #444; --rule: #999; --add-bg: #eef; --del-bg: #fee; }
+  :root { --paper: #fff; --ink: #000; --ink-2: #444; --rule: #999; --add-bg: #eef; --del-bg: #fee; --cite: #14349b; }
   .files, .controls { display: none; }
   .frame { padding: 0 0 0 var(--gutter); max-width: none; }
   a { text-decoration: none; }
@@ -332,12 +405,13 @@ li { margin-bottom: 0.5em; }
 .doc-h { font-family: var(--mono); font-size: 0.8125rem; font-weight: 600; color: var(--ink-2); margin: 1.25rem 0 0.5rem; }
 .flow { margin: 0 0 1rem; }
 .flow ol { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; align-items: stretch; gap: 0.5rem 0; }
-.flow li { display: flex; align-items: center; }
-.flow li + li::before { content: '\2192'; font-family: var(--mono); font-size: 0.9375rem; color: var(--ink-2); padding: 0 0.5rem; }
-.flow .box { display: block; border: 1px solid var(--ink); padding: 0.35rem 0.6rem; font-family: var(--mono); font-size: 0.8125rem; line-height: 1.4; max-width: 13rem; }
+.flow li { display: flex; align-items: stretch; }
+.flow li:not(:last-child)::after { content: '\2192'; font-family: var(--mono); font-size: 0.9375rem; color: var(--cite); padding: 0 0.5rem; display: flex; align-items: center; }
+.flow .box { display: block; box-sizing: border-box; height: 100%; border: 1px solid var(--rule); border-left: 2px solid var(--ink); padding: 0.35rem 0.6rem; font-family: var(--mono); font-size: 0.8125rem; line-height: 1.4; max-width: 13rem; }
 .flow .box b { font-weight: 600; }
 .flow .box small { display: block; font-size: 0.75rem; color: var(--ink-2); }
-.verification { font-family: var(--mono); font-size: 0.8125rem; color: var(--ink-2); margin: 0 0 1rem; }
+.verification { font-family: var(--mono); font-size: 0.8125rem; line-height: 1.7; color: var(--ink-2); margin: 0 0 1rem; }
+.verification .n { color: var(--cite); font-weight: 600; }
 
 /* CV: experience is a commit log on a rail. Dates sit in a wider gutter on
    desktop and above the subject line on a phone. */

@@ -3,7 +3,7 @@
 
 # AI tooling audit, cleared tables
 
-Last audited: Sep 5, 2026
+Last audited: Sept 5, 2026
 
 ## Use daily
 
@@ -12,7 +12,6 @@ Last audited: Sep 5, 2026
 | Claude Code | Primary development environment. Custom slash commands, hooks, subagents, CLAUDE.md as the per-repo contract, headless patterns. Slash commands, not skills: see the Cursor row. |
 | Conductor | In-repo work. Parallel Claude Code sessions, one git worktree per workspace, GitHub issues as the unit of work. The unlock is branch and workspace integration: auto mode can run hard because nothing reaches the real branch until review passes, which makes a hallucination disaster fully recoverable. |
 | Tiered model routing | Frontier model orchestrates, cheaper models do mechanical work. Used in production on the Warmongers reboot and the grading pipeline. Cost split runs roughly 60/30/10. |
-| Local models on dedicated hardware | Qwen via Ollama on a dedicated M1 Pro 32GB running an always-on agent, handling bulk work that does not need a frontier model. |
 | MCP servers (built and consumed) | yt_transcript_mcp, written in Swift 6 against the InnerTube API, in daily use since Mar 2026. Video is the slow path for information, so it gets turned into text first. |
 | Database-backed tracking via MCP | Submission, feedback, and design-doc tracking behind an MCP integration. |
 | Plannotator | Annotation review loop over plans and diffs, so review comments come back into the session instead of living in a chat scroll. |
@@ -24,15 +23,15 @@ Last audited: Sep 5, 2026
 
 | Tool | Adopted | Why, and what is still unproven |
 |---|---|---|
-| Conductor | Sep 2026 | Chosen over cmux for in-repo work. Running several agent sessions at once was the bottleneck, and branch plus workspace integration solves more than collisions: auto mode can run unsupervised because nothing reaches the real branch until review passes, so a hallucination disaster is fully recoverable. Unproven: whether the issue-per-workspace discipline holds up past a dozen parallel workspaces. Listed in both columns on purpose, it is in daily use and still new. |
-| /tailor-cv, self-built | Sep 5, 2026 | Built as an agent skill rather than a script, on the finding that the tailoring judgment does not survive being frozen into code. Regenerates from the master document on every run, with a mechanical validator and a one-page render gate behind it. | |
+| Conductor | Sept 2026 | Chosen over cmux for in-repo work. Running several agent sessions at once was the bottleneck, and branch plus workspace integration solves more than collisions: auto mode can run unsupervised because nothing reaches the real branch until review passes, so a hallucination disaster is fully recoverable. Unproven: whether the issue-per-workspace discipline holds up past a dozen parallel workspaces. Listed in both columns on purpose, it is in daily use and still new. |
+| /tailor-cv, self-built | Sept 5, 2026 | Built as an agent skill rather than a script, on the finding that the tailoring judgment does not survive being frozen into code. Regenerates from the master document on every run, with a mechanical validator and a one-page render gate behind it. | |
 
 ## Evaluated and skipped
 
 | Tool | When | Verdict and reason |
 |---|---|---|
-| Cursor | Rejected Nov 2025, while the consensus ran the other way, and the same month he first let an agent write code at all (see the adoption curve above) | Too thin. The alternative shipped a programmable extensibility surface: custom slash commands, per-repo CLAUDE.md instruction files, and hooks. Cursor read as a chat window docked in an IDE. Useful, not a change in kind. The bet was on which tool could be programmed to hold a project's rules, not which had the nicer chat. Jamie's read as of Sep 2026: it played out and he would make the same call again. |
-| AI animation tools, the landscape rather than a shortlist | 2026, alongside the Warmongers animation work | Reviewed the landscape and found nothing viable. Some looked able to produce spritesheets given existing art to learn from, and maybe simple animations. The game needs unique animations for feel. If every character has the same walk, or the same attack regardless of weapon, it feels flat. Jamie assessed the category, not a shortlist. |
-| Animation libraries such as Mixamo | Same evaluation, 2026 | Rejected on the identical criterion, and this is the row that proves the criterion is real. Jamie's own read is that libraries could arguably do better than the AI tools at the time, which made the AI-versus-not comparison a bit moot. He turned them down anyway, because a library hands the same motion to many different entities and lands in exactly the same sameness problem. Landed on Spine 2D and hand animation. |
+| Cursor | Rejected Nov 2025, while the consensus ran the other way, and the same month I first let an agent write code at all (see the adoption curve above) | Too thin. The alternative shipped a programmable extensibility surface: custom slash commands, per-repo CLAUDE.md instruction files, and hooks. Cursor read as a chat window docked in an IDE. Useful, not a change in kind. The bet was on which tool could be programmed to hold a project's rules, not which had the nicer chat. My read as of Sept 2026: it played out and I would make the same call again. |
+| AI animation tools, the landscape rather than a shortlist | 2026, alongside the Warmongers animation work | Reviewed the landscape and found nothing viable. Some looked able to produce spritesheets given existing art to learn from, and maybe simple animations. The game needs unique animations for feel. If every character has the same walk, or the same attack regardless of weapon, it feels flat. I assessed the category, not a shortlist. |
+| Animation libraries such as Mixamo | Same evaluation, 2026 | Rejected on the identical criterion, and this is the row that proves the criterion is real. My own read is that libraries could arguably do better than the AI tools at the time, which made the AI-versus-not comparison a bit moot. I turned them down anyway, because a library hands the same motion to many different entities and lands in exactly the same sameness problem. Landed on Spine 2D and hand animation. |
 | ElevenLabs | Evaluated 2024, re-evaluated 2025, rejected both times | Impressive in general and unusable in the specific. One-off mispronunciations and odd inflection are obvious enough in technical copy to break it, and it could not say "Xcode" correctly through repeated correction and fiddling. A voice that is right 98 percent of the time fails hardest exactly where the technical terms are. Re-checked a year later rather than rejected once and forgotten, which is the audit discipline this page is claiming. |
 | Unity's native 2D animation tooling | Dropped Jun 12, 2026, one day after the second unit rig was finalized | The rigs worked. What did not survive was the projection to a full roster: animating at that scale in the native tooling was not viable for one person. Moved to Spine 2D. Finished rig work did not buy the approach a stay. |

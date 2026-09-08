@@ -6,10 +6,16 @@ description: Three public repos with build logs anyone can read, and two private
 <h1>Projects</h1>
 
 <section class="file">
-  <header class="file-head"><h2>yt_transcript_mcp</h2><span class="stat">27 issues on the build day</span></header>
+  <header class="file-head"><h2>yt_transcript_mcp</h2></header>
   <p class="meta"><a href="https://github.com/Jamie-DB/yt_transcript_mcp">README</a> <a href="https://github.com/Jamie-DB/yt_transcript_mcp/blob/main/BUILDLOG.md">Build log</a> public</p>
-  <p>A Swift 6 MCP server that pulls YouTube transcripts through the InnerTube API. No Node, no Python. I built it because watching a video for information, even at double speed, is now the slow path, and turning it into text makes it something I can synthesize and act on straight away. Built in a day with a 27-issue review trail, in daily use since.</p>
-  <p class="doc-h">Data flow</p>
+  <ul class="receipts">
+    <li>Swift <span class="n">6</span></li>
+    <li><span class="n">27</span> issues on the build day</li>
+    <li><span class="n">1</span> day</li>
+    <li>in daily use since March</li>
+  </ul>
+  <p>A Swift 6 MCP server that pulls YouTube transcripts through the InnerTube API. No Node, no Python. <span class="prose-key">I built it because watching a video for information, even at double speed, is now the slow path</span>, and turning it into text makes it something I can synthesize and act on straight away. Built in a day with a 27-issue review trail, in daily use since.</p>
+  <p class="role">data flow</p>
   <figure class="flow" aria-label="yt_transcript_mcp data flow">
     <ol>
       <li><span class="box"><b>Claude Code</b><small>or Claude Desktop, packaged as mcpb</small></span></li>
@@ -19,7 +25,8 @@ description: Three public repos with build logs anyone can read, and two private
       <li><span class="box"><b>Back to the agent</b><small>as text it can act on</small></span></li>
     </ol>
   </figure>
-  <p class="verification">Verification: 27 issues on the build day, 17 of them review findings from a second agent with fresh context, 26 closed by the end of it. Offline unit tests. SSRF designed out before the network code existed.</p>
+  <p class="role">verification</p>
+  <p class="verification"><span class="n">27</span> issues on the build day, <span class="n">17</span> of them review findings from a second agent with fresh context, <span class="n">26</span> closed by the end of it. Offline unit tests. SSRF designed out before the network code existed.</p>
   <div class="note">
     <blockquote>Shortcoming: one documented maintenance point, and it is not hosted, so it runs locally only.</blockquote>
     <p class="who">Jamie Brown, self-review</p>
@@ -27,13 +34,20 @@ description: Three public repos with build logs anyone can read, and two private
 </section>
 
 <section class="file">
-  <header class="file-head"><h2>chordsheet</h2><span class="stat">248 tests</span></header>
+  <header class="file-head"><h2>chordsheet</h2></header>
   <p class="meta"><a href="https://github.com/Jamie-DB/chordsheet">README</a> <a href="https://github.com/Jamie-DB/chordsheet/blob/main/BUILDLOG.md">Build log</a> public</p>
-  <p>A web app for play-along guitar chord sheets, written in TypeScript with 248 tests. The interesting design constraint is legal, not technical: the AI assist only ever emits chord names and positions anchored to lyrics the user already has, never lyric content, which is why it works at all where a naive prompt gets refused.</p>
-  <p class="doc-h">Data flow</p>
+  <ul class="receipts">
+    <li>TypeScript</li>
+    <li><span class="n">248</span> agent-generated tests across <span class="n">17</span> files</li>
+    <li><span class="n">12</span> days to rehearsal use</li>
+    <li><span class="n">31</span> issues</li>
+  </ul>
+  <p>A web app for play-along guitar chord sheets, written in TypeScript. The interesting design constraint is legal, not technical: <span class="prose-key">the AI assist only ever emits chord names and positions anchored to lyrics the user already has, never lyric content</span>, which is why it works at all where a naive prompt gets refused.</p>
+  <p>The 248 tests are agent-generated, and that was the experiment. Coverage had just gotten cheap enough to be worth spending freely on, so I let the agent go wide and <span class="prose-key">used tests as a development process rather than a chore</span>. Working out what the new tooling was actually good for, as it came online, was half the point of building this.</p>
+  <p class="role">data flow</p>
   <figure class="flow" aria-label="chordsheet data flow">
     <ol>
-      <li><span class="box"><b>Lyrics</b><small>pasted by you</small></span></li>
+      <li><span class="box"><b>Lyrics pasted by user</b></span></li>
       <li><span class="box"><b>Character-cell layout</b><small>a monospace grid</small></span></li>
       <li><span class="box"><b>Chords</b><small>placed over exact characters. The AI assist emits chord names only</small></span></li>
       <li><span class="box"><b>Capo and transpose</b><small>a display transform, never a rewrite</small></span></li>
@@ -41,7 +55,8 @@ description: Three public repos with build logs anyone can read, and two private
       <li><span class="box"><b>Saved to a folder</b><small>File System Access API, Chromium only</small></span></li>
     </ol>
   </figure>
-  <p class="verification">Verification: 248 tests across 17 files. From a one-paragraph idea to weekly rehearsal use in twelve days and 31 issues.</p>
+  <p class="role">verification</p>
+  <p class="verification"><span class="n">248</span> tests across <span class="n">17</span> files. From a one-paragraph idea to weekly rehearsal use in twelve days and <span class="n">31</span> issues.</p>
   <div class="note">
     <blockquote>Shortcomings, stated in the README: Chromium-only folder save, no mobile layout, no undo, approximate voicings for unusual chords, and the tests stop at the UI boundary.</blockquote>
     <p class="who">Jamie Brown, self-review</p>
@@ -49,10 +64,17 @@ description: Three public repos with build logs anyone can read, and two private
 </section>
 
 <section class="file">
-  <header class="file-head"><h2>history-heatmap</h2><span class="stat">1 file, 0 dependencies</span></header>
+  <header class="file-head"><h2>history-heatmap</h2></header>
   <p class="meta"><a href="https://github.com/Jamie-DB/history-heatmap">README</a> <a href="https://github.com/Jamie-DB/history-heatmap/blob/main/BUILDLOG.md">Build log</a> <a href="https://jamie-db.github.io/history-heatmap/">Live demo</a> public</p>
-  <p>An engine for visualizing historical population dynamics from AD 33 to the present, in one self-contained HTML file with no server and no dependencies. An analytical gaussian heat field evaluated per viewport at constant cost, mass-conserving anti-aliasing for city-scale overlays, and a hybrid model that blends hand-curated anchor data with logistic growth and diffusion. City lifecycle events are pure functions of the playhead, so scrubbing backward replays conquests in reverse with no extra state. The current Christianity and Islam dataset is the first lens rather than the point, and more population types are planned.</p>
-  <p class="doc-h">Data flow</p>
+  <ul class="receipts">
+    <li><span class="n">1</span> HTML file</li>
+    <li><span class="n">0</span> dependencies</li>
+    <li><span class="n">AD 33</span> to the present</li>
+    <li>constant cost per viewport</li>
+  </ul>
+  <p>This one started with a question about how ideas spread and which ones last. The same question sits under internet culture, stock moves, prediction markets and memes, and following it back far enough lands on the most durable ideas people have ever held. <span class="prose-key">Christianity and Islam are the first dataset for that reason, not the subject.</span> It looked like an interesting thing to visualize in an hour or two, it turned out to be genuinely fun to build, and more population categories go in when I have time for them.</p>
+  <p>An engine for visualizing historical population dynamics from AD 33 to the present, in one self-contained HTML file with no server and no dependencies. An analytical gaussian heat field evaluated per viewport at constant cost, mass-conserving anti-aliasing for city-scale overlays, and a hybrid model that blends hand-curated anchor data with logistic growth and diffusion. <span class="prose-key">City lifecycle events are pure functions of the playhead</span>, so scrubbing backward replays conquests in reverse with no extra state.</p>
+  <p class="role">data flow</p>
   <figure class="flow" aria-label="history-heatmap data flow">
     <ol>
       <li><span class="box"><b>Anchor data</b><small>hand-curated, unaudited</small></span></li>
@@ -71,8 +93,8 @@ description: Three public repos with build logs anyone can read, and two private
 
 <section class="file">
   <header class="file-head"><h2 class="serif">Also in flight, not public</h2></header>
-  <p>magenta_pipeline, a three-phase Python, OpenCV, and Photoshop automation chain recovering legacy sprite sheets for a Unity project. A Warmongers reboot in Unity, rebuilding a title that reached No. 20 Top Free on the US App Store. Both are private repos, cited here because their build records are the source of the <a href="/how-i-build/">case studies</a>.</p>
-  <p class="doc-h">magenta_pipeline, data flow</p>
+  <p>magenta_pipeline, a three-phase Python, OpenCV, and Photoshop automation chain recovering legacy sprite sheets for a Unity project. A Warmongers reboot in Unity, rebuilding a title that reached No. 20 Top Free on the US App Store. Both are private repos, cited here because <span class="prose-key">their build records are the source of the <a href="/how-i-build/">case studies</a></span>.</p>
+  <p class="role">magenta_pipeline, data flow</p>
   <figure class="flow" aria-label="magenta_pipeline data flow">
     <ol>
       <li><span class="box"><b>Legacy PSDs</b><small>flattened under a magenta overlay</small></span></li>

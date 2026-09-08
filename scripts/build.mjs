@@ -24,7 +24,7 @@ const SITE = {
 // The PR state. Open means available. Flip to Merged when the role lands.
 const STATE = {
   word: 'Open',
-  line: 'Senior software engineer, Orlando, remote.',
+  line: 'Senior software engineer, Orlando. Remote or hybrid preferred.',
 };
 
 // Preview-only switches for side-by-side builds. Never set in production.
@@ -50,7 +50,33 @@ const FORBIDDEN = [
   [/—/, 'an em dash'],
   [/\bGPA\b/, 'a GPA'],
   [/christianity-heatmap/i, 'the old repo name'],
+  // Voice. Every page speaks as Jamie, to the reader. Third person is the
+  // hub's analyst voice and it reads as someone else describing him, which
+  // is jarring a paragraph after "I". Attribution lines say "Jamie Brown"
+  // in full and are allowed.
+  [/\b(he|him|his|himself)\b/i, 'third-person voice on a first-person page'],
+  [/\bJamie(?:'s|\u2019s|\s+(?!Brown\b))/, 'Jamie named in the third person rather than "I"'],
+  // House style: September abbreviates to Sept, every other month to three
+  // letters. Synced content is normalized in scripts/sync-sources.mjs.
+  [/\bSep\b/, 'September abbreviated Sep rather than Sept'],
+  // Local model hosting was investigated and never bought or set up. Nothing
+  // on a public surface may imply otherwise.
+  [/\b(ollama|qwen)\b/i, 'a local model stack that was never set up'],
+  [/\bM1 Pro\b/i, 'hardware that was never purchased'],
+  [/always-on agent/i, 'an always-on local agent that never existed'],
 ];
+
+// Outbound links open in a new tab, so reading a build log or a repo never
+// costs the reader the site. Off-origin links qualify, and so does the CV PDF,
+// which is same-origin but still replaces the page. mailto is left alone,
+// since a mail client opening is not navigation. rel="noopener" is the
+// security half, and the hidden note is there because target="_blank" on its
+// own is not reliably announced.
+const OUTBOUND = /<a\s([^>]*href="(https?:\/\/[^"]+|[^"]*\.pdf)"[^>]*)>([\s\S]*?)<\/a>/g;
+function newTab(html) {
+  return html.replace(OUTBOUND, (m, attrs, href, text) => (/\btarget=/.test(attrs) ? m
+    : `<a ${attrs} target="_blank" rel="noopener noreferrer">${text}<span class="sr-only"> (opens in a new tab)</span></a>`));
+}
 
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
@@ -95,7 +121,7 @@ function layout({ meta, body }, stats, checks) {
     MONO ? ` data-mono="${MONO}"` : '',
   ].join('');
   const bodyClass = meta.layout ? ` class="${meta.layout}"` : '';
-  return `<!doctype html>
+  return newTab(`<!doctype html>
 <html lang="en"${attrs}>
 <head>
   <meta charset="utf-8">
@@ -135,7 +161,7 @@ ${body}
   <script src="/js/theme.js"></script>
 </body>
 </html>
-`;
+`);
 }
 
 // Generated content. Placeholders like {{audit-daily}} in a page fragment are
