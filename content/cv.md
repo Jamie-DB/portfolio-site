@@ -83,7 +83,7 @@ Taught and maintained five courses across six course sections, three in iOS deve
 ### Senior Software Engineer, Tech Lead, Visualization and Control
 <p class="meta"><time data-short="Tech Lead">Jan 2020 to Jun 2022</time> Luminar Technologies, remote</p>
 
-An individual-contributor role first: hands-on engineering was at least three quarters of the job, with the team lead arc layered on top of it.
+An individual-contributor role first: hands-on engineering was at least three quarters of the job, with the Tech Lead arc layered on top of it.
 
 - Tech Lead on a 7-person visualization team of senior and staff engineers building real-time LiDAR visualization and control software in C++, C#, and Unity for production autonomous driving hardware, the Iris sensor, while shipping code daily.
 - Progressed from individual contributor to Tech Lead responsible for stakeholder alignment across several automotive OEM engineering teams. Primary technical liaison for Volvo, Toyota, and SAIC, and the contact point for all technical discussion between the visualization team and the larger organization.
