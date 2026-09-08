@@ -64,6 +64,6 @@ Facts and copy that entered at the site and need to flow back to the hub's maste
 - Two sessions edited this worktree on Sept 7. Check `git status` before assuming the tree is yours, and commit only what you mean to.
 - `content/ai-tooling-audit.md` is generated. Edit the hub or the corrections list in `scripts/sync-sources.mjs`, then `npm run sync`. `content/cv.md` is hand-carried and edited directly.
 - The forbidden-terms scan will fail the build on: the stack name, the retired GitHub handle, a private individual's name, money figures, "presented to," em dashes, GPA, the old repo name, third-person pronouns, "Jamie" in prose, "Sep," and the local-model terms. Read `FORBIDDEN` in `scripts/build.mjs` before writing copy.
-- The split view is generated at layout time from the unified lines. Edit the unified lines only.
+- The split view is built and works, but Jamie held it on Sept 8: the toggle is commented out in `src/pages/index.html`. Restore the `.view-toggle` span to enable it. It is generated at layout time from the unified lines, so edit the unified lines only.
 - The ruler's bars come from the `<time data-short="...">` tags in `content/cv.md`. A new role needs both the dates and a short label.
 - The CV folds print open only with JavaScript.
