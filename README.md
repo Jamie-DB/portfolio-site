@@ -61,6 +61,8 @@ Live at [jamiebrown.engineer](https://jamiebrown.engineer), on Cloudflare Pages 
 
 The site launched on `jamiebrown.pages.dev` and moved to the custom domain on Sept 8, 2026, because LinkedIn blocks the entire `pages.dev` zone and showed readers a malicious-site warning instead of the site. The `pages.dev` URL still resolves; canonical and Open Graph tags point at the custom domain.
 
+The move has two hand-off docs: [docs/linkedin-recovery-2026-09-08.md](docs/linkedin-recovery-2026-09-08.md) for getting the LinkedIn surfaces onto the new URL, and [docs/carry-forward-domain-move-2026-09-08.md](docs/carry-forward-domain-move-2026-09-08.md) for the hub changes it forces.
+
 ## Build and run
 
 Requires Node 22 or newer.
