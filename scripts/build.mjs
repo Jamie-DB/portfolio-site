@@ -21,8 +21,8 @@ const SITE = {
   repo: 'https://github.com/Jamie-DB/portfolio-site',
   buildlog: 'https://github.com/Jamie-DB/portfolio-site/blob/main/BUILDLOG.md',
   // Share card only. The site itself still has no images on any page.
-  ogImage: '/assets/comic-context-window.png',
-  ogImageAlt: 'A flat illustration of a person reaching up to pull down a sash window labelled "context window." Inside the window are notes and a robot\u2019s face.',
+  ogImage: '/assets/comic-recursion.png',
+  ogImageAlt: 'A flat illustration of a robot in a beret painting a portrait of a person at an easel captioned "AI-assisted programmer art." The person, holding a coffee, says: What did I tell you about recursion!?',
 };
 
 // The PR state. Open means available. Flip to Merged when the role lands.
