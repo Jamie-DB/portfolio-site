@@ -21,7 +21,7 @@ const SITE = {
   repo: 'https://github.com/Jamie-DB/portfolio-site',
   buildlog: 'https://github.com/Jamie-DB/portfolio-site/blob/main/BUILDLOG.md',
   // Share card only. The site itself still has no images on any page.
-  ogImage: '/assets/og-context-window.png',
+  ogImage: '/assets/comic-context-window.png',
   ogImageAlt: 'A flat illustration of a person reaching up to pull down a sash window labelled "context window." Inside the window are notes and a robot\u2019s face.',
 };
 
@@ -50,6 +50,7 @@ const NAV = [
   { href: '/ai-tooling-audit/', label: 'AI tooling audit' },
   { href: '/cv/', label: 'CV and contact' },
   { href: '/projects/', label: 'Projects' },
+  { href: '/programmer-art/', label: 'Programmer art' },
 ];
 
 // Never on a public surface. Scanned against every page's main content.

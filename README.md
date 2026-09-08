@@ -1,6 +1,6 @@
 # portfolio-site
 
-Jamie Brown's portfolio site. Five pages that make one argument, framed as a pull request. Static, built with Claude Code and reviewed by hand.
+Jamie Brown's portfolio site. Five pages that make one argument, framed as a pull request, and a sixth for the comics. Static, built with Claude Code and reviewed by hand.
 
 ## What it does and why I built it
 
@@ -46,10 +46,12 @@ What was delegated:
 - The CV's folds need JavaScript to print open. Without it, a printed CV shows only the summary lines of folded sections.
 - The split view on Home and the blame gutter on the working model are desktop-only. On narrow screens the hunk stays unified and the blame note drops onto its own line.
 - The screenshot slots on the projects page and the recording slot on the working model are still empty comments.
+- The comics on the programmer-art page are numbered 3 and 4 in their source files. Numbers 1 and 2 were never exported, so the set has a gap nobody but me can see.
 
 ## What's next
 
 - Re-render and republish the one-page CV PDF against `jamiebrown.engineer`.
+- Draw the third comic, the one about AI-assisted programmer art drawing itself correctly on the first try.
 - Record and embed the two-minute screen recording.
 - Fill the meta case study slot when the job hunt's numbers are worth showing.
 - Link the LinkedIn adoption-curve article when it publishes.

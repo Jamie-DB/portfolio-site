@@ -65,3 +65,11 @@ The site went live in the morning on `jamiebrown.pages.dev`, and the launch post
 The decision from Sept 7 to ship on the `*.pages.dev` URL and not hold the launch for a custom domain was the right call on the information available, and it cost a morning. The fix was a domain we own: `jamiebrown.engineer`, chosen over the shorter options because the exact-name `.dev` and `.com` were both taken, and over the obscure alternatives because the whole problem was a URL-reputation filter and there was no sense in trading one low-trust suffix for another.
 
 `SITE_URL` carried the change into every canonical and Open Graph tag, which is why the domain move was a one-line default and a dashboard variable rather than a search and replace. The published surfaces were the expensive part: the CV PDF was rendered against the old URL, and so were the post and the article that were already live.
+
+## Sept 8, 2026. Programmer art, and a page to put it on
+
+The share card needed an image and the site had none, by a rule I had kept on purpose. What I had instead were two comics from the same afternoon: a robot delivering a stack of approved pull requests by 9:03 in the morning, and a person pulling the context window shut. They are cream and orange cartoons and they look nothing like the rest of the site.
+
+So they got their own page rather than a quiet corner of an existing one. The joke it is built around is that programmer art, the placeholder a developer draws when nobody else will, has a successor about eighteen months old. I did not draw these either. I described them, looked at four versions, and kept two. The generation was free and the picking was not, which is the site's whole argument arriving in the most literal form available.
+
+The page breaks the no-pictures rule and says so in its last line. The mismatch is the point: it reads like a different site because it came out of a different part of the same workflow. The third comic in the set is this page, and it is not drawn yet.
