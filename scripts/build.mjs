@@ -20,6 +20,9 @@ const SITE = {
   url: (process.env.SITE_URL || 'https://jamiebrown.engineer').replace(/\/$/, ''),
   repo: 'https://github.com/Jamie-DB/portfolio-site',
   buildlog: 'https://github.com/Jamie-DB/portfolio-site/blob/main/BUILDLOG.md',
+  // Share card only. The site itself still has no images on any page.
+  ogImage: '/assets/og-context-window.png',
+  ogImageAlt: 'A flat illustration of a person reaching up to pull down a sash window labelled "context window." Inside the window are notes and a robot\u2019s face.',
 };
 
 // The PR state. Open means available. Flip to Merged when the role lands.
@@ -175,6 +178,11 @@ function layout({ meta, body }, stats, checks) {
   <meta property="og:title" content="${esc(title)}">
   <meta property="og:description" content="${esc(meta.description)}">
   <meta property="og:url" content="${url}">
+  <meta property="og:image" content="${SITE.url + SITE.ogImage}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="675">
+  <meta property="og:image:alt" content="${esc(SITE.ogImageAlt)}">
+  <meta name="twitter:card" content="summary_large_image">
   <script>(function(){try{var d=document.documentElement,t=localStorage.getItem('theme'),p=localStorage.getItem('palette');if(t)d.setAttribute('data-theme',t);if(p)d.setAttribute('data-palette',p)}catch(e){}})();</script>
   <link rel="stylesheet" href="/css/site.css">
 </head>

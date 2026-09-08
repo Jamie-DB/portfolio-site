@@ -25,7 +25,9 @@ Refresh LinkedIn's cache first, fix the highest-traffic surface next, then the d
 
 Open [Post Inspector](https://www.linkedin.com/post-inspector/), paste `https://jamiebrown.engineer`, inspect. Do this for the home page first, then for `/how-i-build/` and `/ai-tooling-audit/` if you plan to link them directly.
 
-You should see the title "Jamie Brown, senior software engineer" and the description from the page. **Expect no image.** The site has no `og:image` because it has no pictures by design, so LinkedIn will render a text-only card. That is a smaller card with less reach. If you want an image card, that is a real decision about the site, not a fix to make here.
+You should see the title "Jamie Brown, senior software engineer", the description from the page, and the share card image: the context-window illustration, 1200 by 675. The image is a share card only and does not appear on any page of the site, which still has no pictures in its own layout.
+
+If the card renders text-only, the image did not fetch. Check `curl -sI https://jamiebrown.engineer/assets/og-context-window.png` returns 200 before re-inspecting.
 
 If Post Inspector shows an error or the old content, stop and recheck the four preconditions. Do not post.
 
