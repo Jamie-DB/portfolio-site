@@ -179,7 +179,7 @@ A two-person studio. Full time for a little over five years, then maintenance an
 <dd><span class="tag">git and LFS</span><span class="tag">Jira</span><span class="tag">Plastic SCM</span><span class="tag">SAFe Agile</span><span class="tag">CMake</span><span class="tag">Conan</span><span class="tag">Docker</span><span class="tag">Jenkins</span><span class="tag">Xcode</span><span class="tag">Figma</span><span class="tag">Database API and schema design</span><span class="tag">Supabase</span><span class="tag">Cloudflare Pages and wrangler</span><span class="tag">UML</span><span class="tag">RESTful APIs</span></dd>
 
 <dt>leadership and communication</dt>
-<dd class="tier">Tech Lead on a 7-person senior and staff engineering team, and led an 8 to 10 person instructor team. Customer-facing technical liaison for Volvo, Toyota, and SAIC. Twelve years explaining hard technical ideas to people who did not already agree, with a written feedback record of 70+ documents in a single cohort. Regulatory writing that quotes federal code accurately.</dd>
+<dd class="tier">Tech Lead on a 7-person senior and staff engineering team, and led an 8 to 10 person instructor team. Customer-facing technical liaison for Volvo, Toyota, and SAIC. Twelve years explaining hard technical ideas to people who did not already agree.</dd>
 </dl>
 
 <details class="fold">
