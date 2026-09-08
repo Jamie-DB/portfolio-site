@@ -67,8 +67,11 @@ const FORBIDDEN = [
   // hub's analyst voice and it reads as someone else describing him, which
   // is jarring a paragraph after "I". Attribution lines say "Jamie Brown"
   // in full and are allowed.
-  [/\b(he|him|his|himself)\b/i, 'third-person voice on a first-person page'],
-  [/\bJamie(?:'s|\u2019s|\s+(?!Brown\b))/, 'Jamie named in the third person rather than "I"'],
+  // Scoped to prose. Comic captions carry dialogue, and the characters in the
+  // comics are not me, so a pronoun inside a figcaption is not the leak this
+  // rule is looking for.
+  [/\b(he|him|his|himself)\b/i, 'third-person voice on a first-person page', 'prose'],
+  [/\bJamie(?:'s|\u2019s|\s+(?!Brown\b))/, 'Jamie named in the third person rather than "I"', 'prose'],
   // House style: September abbreviates to Sept, every other month to three
   // letters. Synced content is normalized in scripts/sync-sources.mjs.
   [/\bSep\b/, 'September abbreviated Sep rather than Sept'],
@@ -319,8 +322,9 @@ function scan(pages) {
   let semicolons = 0;
   for (const p of pages) {
     const text = p.body.replace(/<!--[\s\S]*?-->/g, '');
-    for (const [re, why] of FORBIDDEN) {
-      if (re.test(text)) hits.push(`${p.meta.path}: ${why} (${re})`);
+    const prose = text.replace(/<figcaption>[\s\S]*?<\/figcaption>/g, '');
+    for (const [re, why, scope] of FORBIDDEN) {
+      if (re.test(scope === 'prose' ? prose : text)) hits.push(`${p.meta.path}: ${why} (${re})`);
     }
     for (const para of text.match(/<p[^>]*>[\s\S]*?<\/p>/g) || []) {
       if (/;/.test(para.replace(/&[a-z#0-9]+;/g, ''))) { semicolons++; hits.push(`${p.meta.path}: semicolon in prose`); }

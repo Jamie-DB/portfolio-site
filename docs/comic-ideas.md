@@ -36,4 +36,4 @@ Panel: the robot presenting a clean four-point diagnosis. Small print at the bot
 
 ## Note on the set
 
-The published comics are numbered 3, 4 and 7 in their source files. Numbers 1, 2, 5 and 6 were never exported. Any of these that get drawn should take the next free number rather than closing those gaps.
+The published comics are numbered 3, 4, 7 and 8 in their source files. Numbers 1, 2, 5 and 6 were never exported. Any of these that get drawn should take the next free number rather than closing those gaps.
