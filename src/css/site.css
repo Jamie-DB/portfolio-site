@@ -29,18 +29,19 @@
   --ink: #000000;
   --ink-2: #6b6b6b;
   --rule: #d9d9d9;
-  /* Diff hues. Red and green by default, the way the tools do it. The
-     colorblind palette swaps in blue and plum. Markers carry the meaning on
-     their own, so color is never the only channel. */
+  /* Diff hues. Blue and plum by default, which stay apart for colorblind
+     readers. The standard palette swaps in red and green, the way the tools
+     do it. Markers carry the meaning on their own, so color is never the only
+     channel. */
   --rg-add: #177a38; --rg-add-bg: #eaf6ee; --rg-add-ink: #0f5a2a; --rg-del: #b3261e; --rg-del-bg: #fdeeed; --rg-del-ink: #8a1c15;
   --cb-add: #1b4bd1; --cb-add-bg: #eef3ff; --cb-add-ink: #12379e; --cb-del: #8e2c5a; --cb-del-bg: #fbeff5; --cb-del-ink: #6e1f45;
-  --add: var(--rg-add); --add-bg: var(--rg-add-bg); --add-ink: var(--rg-add-ink);
-  --del: var(--rg-del); --del-bg: var(--rg-del-bg); --del-ink: var(--rg-del-ink);
+  --add: var(--cb-add); --add-bg: var(--cb-add-bg); --add-ink: var(--cb-add-ink);
+  --del: var(--cb-del); --del-bg: var(--cb-del-bg); --del-ink: var(--cb-del-ink);
   /* Receipt hue. Evidence only: dates, counts, repo links. Always mono, never
      inside a tinted block, so it cannot be read as a diff line. It swaps with
      the palette so it stays separable from add and del either way. */
   --rg-cite: #1b4bd1; --cb-cite: #7a5200;
-  --cite: var(--rg-cite);
+  --cite: var(--cb-cite);
   --serif: 'Source Serif 4', Charter, 'Iowan Old Style', Georgia, serif;
   --mono: 'Commit Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   --measure: 38rem;
@@ -51,10 +52,10 @@
   --line: calc(var(--body) * var(--lh));
   color-scheme: light;
 }
-[data-palette="colorblind"] {
-  --add: var(--cb-add); --add-bg: var(--cb-add-bg); --add-ink: var(--cb-add-ink);
-  --del: var(--cb-del); --del-bg: var(--cb-del-bg); --del-ink: var(--cb-del-ink);
-  --cite: var(--cb-cite);
+[data-palette="standard"] {
+  --add: var(--rg-add); --add-bg: var(--rg-add-bg); --add-ink: var(--rg-add-ink);
+  --del: var(--rg-del); --del-bg: var(--rg-del-bg); --del-ink: var(--rg-del-ink);
+  --cite: var(--rg-cite);
 }
 [data-mono="departure"] { --mono: 'Departure Mono', ui-monospace, monospace; }
 
@@ -217,7 +218,18 @@ del {
   text-decoration-thickness: 1px;
   text-decoration-color: var(--del);
   color: var(--del-ink);
+  background: var(--del-bg);
 }
+/* An inline addition: a phrase that entered the working model after it was
+   first written. Same hue rule as an added line, no underline, since the
+   tint already says what it is. */
+ins {
+  text-decoration: none;
+  color: var(--add-ink);
+  background: var(--add-bg);
+  padding: 0 0.15em;
+}
+ins b, .model ins { font-weight: inherit; }
 
 /* A removed line is struck, the way a prose diff marks one. The strike lands on
    the thing that was removed and not on the reasoning for removing it, so the
@@ -427,7 +439,9 @@ body.cv { --rail: 1rem; }
 .commit::before { content: ''; position: absolute; left: calc(-1 * var(--rail) - 5px); top: 0.5em; width: 10px; height: 10px; border-radius: 50%; background: var(--ink); }
 .commit.head::before { background: var(--add); }
 .commit h3 { margin: 0 0 0.15rem; }
-.commit .when { font-family: var(--mono); font-size: 0.8125rem; color: var(--ink-2); margin: 0 0 0.25rem; }
+.commit .when { font-family: var(--mono); font-size: 0.8125rem; color: var(--cite); margin: 0 0 0.25rem; }
+.commit + .commit { border-top: 1px solid var(--rule); padding-top: 1.5rem; }
+.commit.head h3 { color: var(--add-ink); }
 .commit .meta { margin-bottom: 0.75rem; }
 @media (min-width: 40.01rem) {
   .commit .when { position: absolute; left: calc(-1 * var(--gutter)); width: calc(var(--gutter) - var(--rail) - 1rem); text-align: right; top: 0.25em; margin: 0; }
@@ -441,3 +455,51 @@ body.cv { --rail: 1rem; }
 .download a { border: 1px solid var(--ink); padding: 0.35em 0.75em; text-decoration: none; }
 .download a:hover { background: var(--ink); color: var(--paper); }
 .contact { font-family: var(--mono); font-size: 0.9375rem; line-height: 1.8; margin: 0 0 1.5rem; list-style: none; padding: 0; }
+
+/* Editor-style folds. A summary line with a fold marker, and the lines under
+   it hidden until asked for. The build appends the hidden line count. Printing
+   opens every fold. */
+details.fold { margin: 0.35rem 0 0.9rem; }
+details.fold > summary {
+  cursor: pointer;
+  list-style: none;
+  font-size: 1rem;
+  line-height: 1.5;
+  padding: 0.15rem 0;
+}
+details.fold > summary::-webkit-details-marker { display: none; }
+details.fold > summary::before {
+  content: '\25B8';
+  font-family: var(--mono);
+  color: var(--cite);
+  display: inline-block;
+  width: 1.1em;
+}
+details.fold[open] > summary::before { content: '\25BE'; }
+details.fold > summary:hover { text-decoration: underline; text-underline-offset: 0.15em; }
+details.fold > summary .fold-n { font-family: var(--mono); font-size: 0.75rem; color: var(--ink-2); margin-left: 0.6em; white-space: nowrap; }
+details.fold[open] > summary .fold-n { visibility: hidden; }
+details.fold > :not(summary) { margin-left: 1.1em; }
+details.fold > ul, details.fold > ol { margin-top: 0.4rem; }
+details.fold > p:first-of-type { margin-top: 0.4rem; }
+
+/* Skills as tags, grouped by tier. Same box vocabulary as the data-flow
+   diagrams, so a skill reads as a node rather than a keyword in a paragraph. */
+.tags { margin: 0 0 1.5rem; }
+.tags dt { font-family: var(--mono); font-size: 0.75rem; font-weight: 600; color: var(--ink-2); margin: 1rem 0 0.4rem; }
+.tags dt::before { content: '// '; }
+.tags dd { margin: 0; }
+.tags .tier { font-size: 0.9375rem; color: var(--ink-2); margin: 0 0 0.5rem; }
+.tag {
+  display: inline-block;
+  border: 1px solid var(--rule);
+  border-left: 2px solid var(--ink);
+  padding: 0.12rem 0.5rem;
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  margin: 0 0.35rem 0.4rem 0;
+}
+.tag.deep { border-left-color: var(--cite); font-weight: 600; }
+.tag small { color: var(--ink-2); font-size: 0.75rem; margin-left: 0.35em; }
+.cv .personal h3::after { content: 'personal work'; font-family: var(--mono); font-size: 0.75rem; font-weight: 400; color: var(--cite); margin-left: 0.75em; vertical-align: 0.15em; }

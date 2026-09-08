@@ -1,18 +1,18 @@
 ---
 title: How I build software now
 path: /how-i-build/
-description: AI has collapsed the cost of building. It has not collapsed the cost of verifying, and the gap between those two is where ready lives now. A working model and four case studies from real Claude Code sessions.
+description: AI has collapsed the cost of building and reduced the cost of verifying. What is left in the gap is taste, expertise, and knowing which context is the right one. A working model and four case studies from real Claude Code sessions.
 ---
 <h1>How I build software now</h1>
 
 <h2>Working model</h2>
 
 <ol class="model">
-  <li><b>Direction first, in my head.</b> Planning, data, and design happen before a repo exists. I use LLMs to distill that direction into design-ready documentation with the reasoning, rules, and findings attached. Code comes third. Holding the direction is mine. Originating it is not always: with the right context and enough pushback, the start, the middle or the end of a genuinely good idea often comes from the agent. <span class="prose-key">What stays with me is deciding which ones survive.</span></li>
+  <li><b>Direction first<del>, in my head</del>.</b> Planning, data, and design happen before a repo exists. I use LLMs to distill that direction into design-ready documentation with the reasoning, rules, and findings attached. Code comes third. Holding the direction is mine. Originating it is not always: with the right context and enough pushback, the start, the middle or the end of a genuinely good idea often comes from the agent. <span class="prose-key">What stays with me is deciding which ones survive.</span></li>
   <li><b>What I delegate.</b> Generation and mechanical breadth. Drafts, scaffolds, migrations, bulk edits, and the second opinion I would otherwise never get working alone.</li>
-  <li><b>What I never delegate.</b> Whether the thing is right. Architecture calls, taste calls, and the decision that something is done stay with me, including the times the agent's answer is technically correct.</li>
-  <li><b>How I verify.</b> A second agent with fresh context reviews the first one's work and files findings as issues instead of applying silent fixes. I arbitrate. Nothing merges on an agent's own say-so, and failures get written down the same day they happen, while the reasoning is still recoverable.</li>
-  <li><b>The standard.</b> <span class="prose-key">AI has collapsed the cost of building. It has not collapsed the cost of verifying</span>, and the gap between those two is where ready lives now. Ready means evaluated, not generated.</li>
+  <li><b>What I never delegate.</b> Whether the thing is right. <del>Architecture calls,</del> Taste calls, and the decision that something is done stay with me, including the times the agent's answer is technically correct. <ins>Architecture calls used to be on this list. The tools are right there now, and that is changing.</ins></li>
+  <li><b>How I verify.</b> A second agent with fresh context reviews the first one's work and files findings as issues instead of applying silent fixes. I arbitrate. Nothing merges on an agent's own say-so, and failures get written down the same day they happen, while the reasoning is still recoverable. <ins>Me in the loop wearing different hats: pair programmer, project manager, human QA.</ins></li>
+  <li><b>The standard.</b> <span class="prose-key">AI has collapsed the cost of building. It has <del>not collapsed</del> <ins>reduced</ins> the cost of verifying <ins>and testing</ins></span>. <del>The gap between those two is where ready lives now.</del> <ins>What is left in the gap is taste, expertise, and, more than context itself, the human judgment about which context is the right one for a given moment, project, or product.</ins> Ready means evaluated, not generated.</li>
 </ol>
 
 <!-- SLOT: 2-minute narrated screen recording embeds here. Jamie records it after launch. Ship without it. -->
@@ -28,7 +28,7 @@ description: AI has collapsed the cost of building. It has not collapsed the cos
 
   <p class="role">situation</p>
 
-  <p class="ctx">One of my repos was a single command from going public, and my personal song library was sitting in it, <span class="prose-key">47 files that could not ship in a public repo</span>. A history rewrite was staged to strip them out of every commit and main was ready to force push.</p>
+  <p class="ctx">One of my repos was a single command from going public, and my personal song library was sitting in it, <span class="prose-key">47 files that could not ship in a public repo</span>. A history rewrite was staged to strip them out of every commit and main was ready to force push. Nightmare fuel. (Don't worry. I had backups, but still.)</p>
 
   <p class="role">what the pre-flip scan turned up</p>
 
@@ -38,7 +38,7 @@ description: AI has collapsed the cost of building. It has not collapsed the cos
 
   <div class="add">
     <p class="role">result</p>
-    <p>Caught before the rewrite ran, so it cost nothing. That scan is now step two of a written flip procedure, and every repo I have made public since has run it. The general version: <span class="prose-key">on an action you cannot take back, the interesting work is the scan you run before it, not the command itself</span>. It is also why I merge with merge commits instead of rebasing, which is the rule that would have prevented the whole situation and had not been followed.</p>
+    <p>Caught before the rewrite ran, so it cost nothing. That scan is now step two of a written flip procedure, and every repo I have made public since has run it. The general version: <span class="prose-key">on an action you cannot take back, the interesting work is the scan you run before it, not the command itself</span>. It is also why I merge with merge commits instead of rebasing, which is the rule that would have prevented the whole situation and had not been fully followed by the agent.</p>
   </div>
 </section>
 

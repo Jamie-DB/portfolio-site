@@ -1,7 +1,8 @@
 // Display controls. Dark mode follows the system setting until the toggle
-// overrides it. The colorblind palette is off until asked for. Both choices
-// are remembered in localStorage and applied before first paint by the inline
-// script in <head>.
+// overrides it. The colorblind palette is the default, and the standard
+// red-and-green palette is there for anyone who wants the tools' colors. Both
+// choices are remembered in localStorage and applied before first paint by
+// the inline script in <head>. Printing opens every fold first.
 (function () {
   var root = document.documentElement;
   var controls = document.querySelector('.controls');
@@ -14,8 +15,8 @@
     var t = root.getAttribute('data-theme');
     return t ? t === 'dark' : media.matches;
   }
-  function isColorblind() {
-    return root.getAttribute('data-palette') === 'colorblind';
+  function isStandard() {
+    return root.getAttribute('data-palette') === 'standard';
   }
   function remember(key, value) {
     try { localStorage.setItem(key, value); } catch (e) {}
@@ -32,8 +33,8 @@
   function render() {
     label(theme, isDark() ? 'Light' : 'Dark', 'mode');
     theme.setAttribute('aria-pressed', String(isDark()));
-    label(palette, isColorblind() ? 'Standard' : 'Colorblind', 'palette');
-    palette.setAttribute('aria-pressed', String(isColorblind()));
+    label(palette, isStandard() ? 'Colorblind' : 'Standard', 'palette');
+    palette.setAttribute('aria-pressed', String(isStandard()));
   }
 
   theme.addEventListener('click', function () {
@@ -43,14 +44,26 @@
     render();
   });
   palette.addEventListener('click', function () {
-    if (isColorblind()) {
+    if (isStandard()) {
       root.removeAttribute('data-palette');
       remember('palette', '');
     } else {
-      root.setAttribute('data-palette', 'colorblind');
-      remember('palette', 'colorblind');
+      root.setAttribute('data-palette', 'standard');
+      remember('palette', 'standard');
     }
     render();
+  });
+
+  // Folds print open. Remember which were closed so the page goes back to how
+  // the reader left it.
+  var reopened = [];
+  window.addEventListener('beforeprint', function () {
+    reopened = Array.prototype.filter.call(document.querySelectorAll('details.fold'), function (d) { return !d.open; });
+    reopened.forEach(function (d) { d.open = true; });
+  });
+  window.addEventListener('afterprint', function () {
+    reopened.forEach(function (d) { d.open = false; });
+    reopened = [];
   });
   media.addEventListener('change', render);
 

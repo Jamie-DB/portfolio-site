@@ -42,6 +42,8 @@ What was delegated:
 - One stylesheet with hand-managed specificity. Fine at this size, and it will not stay fine if the site grows.
 - The three `-`/`+` pairs on Home and the state line in the header are copy written during the build rather than carried from the content pack. Every fact in them traces to the hub, but the wording has not been through the hub's clearance pass.
 - The data-flow diagrams on the projects page are hand-authored from facts in the content pack and the master document. They are not generated from the repos, so a change in a repo's architecture will not update them.
+- Two audit rows carry dates corrected on the site before the hub's source file was updated. The sync script re-applies those corrections, but the hub is the record and needs the backfill.
+- The CV's folds need JavaScript to print open. Without it, a printed CV shows only the summary lines of folded sections.
 
 ## What's next
 
@@ -50,6 +52,10 @@ What was delegated:
 - Fill the meta case study slot when the job hunt's numbers are worth showing.
 - Link the LinkedIn adoption-curve article when it publishes.
 - Held idea: a one-page variant styled after GitKraken's neon-on-midnight diff view.
+
+## Deploying
+
+Cloudflare Pages with the Git integration. The step-by-step guide, including the settings to check, is in [docs/deploy-cloudflare-pages.md](docs/deploy-cloudflare-pages.md).
 
 ## Build and run
 

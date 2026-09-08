@@ -30,14 +30,14 @@ const STATE = {
 // Preview-only switches for side-by-side builds. Never set in production.
 const MONO = process.env.MONO || '';       // '' | 'departure'
 const THEME = process.env.THEME || '';     // '' | 'dark' | 'light'
-const PALETTE = process.env.PALETTE || ''; // '' | 'colorblind'
+const PALETTE = process.env.PALETTE || ''; // '' | 'standard'
 
 const NAV = [
   { href: '/', label: 'Home' },
-  { href: '/projects/', label: 'Projects' },
   { href: '/how-i-build/', label: 'How I build software now' },
   { href: '/ai-tooling-audit/', label: 'AI tooling audit' },
   { href: '/cv/', label: 'CV and contact' },
+  { href: '/projects/', label: 'Projects' },
 ];
 
 // Never on a public surface. Scanned against every page's main content.
@@ -151,12 +151,12 @@ ${body}
     <footer class="colophon">
       <p class="checks">${checks}</p>
       <p>Built with Claude Code and reviewed by me. <a href="${SITE.repo}">Source</a> and <a href="${SITE.buildlog}">build log</a> on GitHub.</p>
-      <p>Diff colors default to red and green, the way the tools do it. The colorblind palette switches to blue and plum.</p>
+      <p>Diff colors default to blue and plum, which stay apart for colorblind readers. The standard palette switches to red and green, the way the tools do it.</p>
     </footer>
   </div>
   <div class="controls" hidden>
     <button type="button" data-control="theme" aria-pressed="false">Dark mode</button>
-    <button type="button" data-control="palette" aria-pressed="false">Colorblind palette</button>
+    <button type="button" data-control="palette" aria-pressed="false">Standard palette</button>
   </div>
   <script src="/js/theme.js"></script>
 </body>
@@ -200,6 +200,15 @@ function commits(html) {
   }).join('');
 }
 
+// A fold is a <details class="fold"> block. The build appends a line count to
+// its summary so the collapsed state reads like an editor's fold marker.
+function folds(html) {
+  return html.replace(/<details class="fold"([^>]*)>\s*<summary>([\s\S]*?)<\/summary>([\s\S]*?)<\/details>/g, (m, attrs, summary, inner) => {
+    const n = (inner.match(/<li\b|<tr\b|<p\b|<dt\b/g) || []).length;
+    return `<details class="fold"${attrs}><summary>${summary}<span class="fold-n">${n} lines</span></summary>${inner}</details>`;
+  });
+}
+
 async function generated() {
   const audit = await readFile(path.join(ROOT, 'content', 'ai-tooling-audit.md'), 'utf8');
   const cv = await readFile(path.join(ROOT, 'content', 'cv.md'), 'utf8').catch(() => '');
@@ -208,7 +217,7 @@ async function generated() {
     'audit-daily': auditRows(mdTable(audit, 'Use daily'), 'ctx', false),
     'audit-adopted': auditRows(mdTable(audit, 'Just adopted'), 'add', true),
     'audit-skipped': auditRows(mdTable(audit, 'Evaluated and skipped'), 'del', true),
-    'cv': cv ? commits(marked.parse(cv)) : '',
+    'cv': cv ? folds(commits(marked.parse(cv))) : '',
   };
 }
 
@@ -283,7 +292,9 @@ async function main() {
   const contrast = runContrast();
   const { hits, semicolons } = scan(pages);
   const built = new Date().toISOString().slice(0, 10);
-  const checks = `Checks on this build: contrast ${contrast.passed} of ${contrast.total} pass. Forbidden terms ${hits.length - semicolons}. Semicolons in prose ${semicolons}. Pages ${pages.length}. Built ${built}.`;
+  // Semicolons in prose still fail the build, they just do not get a line in
+  // the footer, since nobody reading the site needs that level of detail.
+  const checks = `Checks on this build: contrast ${contrast.passed} of ${contrast.total} pass. Forbidden terms ${hits.length - semicolons}. Pages ${pages.length}. Built ${built}.`;
   console.log(checks);
   if (contrast.passed !== contrast.total || hits.length) {
     for (const h of hits) console.error(`  FAIL ${h}`);

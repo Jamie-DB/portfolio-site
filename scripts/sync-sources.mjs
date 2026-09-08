@@ -40,6 +40,20 @@ const clear = (text) => text
   .replace(/NO NAMES on purpose: /g, '')               // editorial note, not copy
   .replace(/\bSep\b/g, 'Sept');                        // house style: September is Sept, the rest are three letters
 
+// Corrections Jamie gave directly on Sept 7, 2026, applied here so a re-sync
+// cannot silently undo them. Each one is pending backfill in the hub's source
+// file, after which its entry here becomes a no-op and can be deleted.
+const CORRECTIONS = [
+  ['Rejected Nov 2025, while the consensus ran the other way, and the same month he first let an agent write code at all (see the adoption curve above)',
+   'Rejected in the summer and fall of 2025, while first investigating AI tools, and while the consensus ran the other way'],
+  ['Rejected Nov 2025, while the consensus ran the other way, and the same month I first let an agent write code at all (see the adoption curve above)',
+   'Rejected in the summer and fall of 2025, while first investigating AI tools, and while the consensus ran the other way'],
+  ['2026, alongside the Warmongers animation work', 'Spring 2026, alongside the Warmongers animation work'],
+  ['Same evaluation, 2026', 'Same evaluation, spring 2026'],
+  [' Finished rig work did not buy the approach a stay.', ''],
+];
+const correct = (text) => CORRECTIONS.reduce((t, [from, to]) => t.split(from).join(to), text);
+
 const useDaily = table('Use daily');
 const adopted = table('Just adopted');
 const skipped = table('Evaluated and skipped');
@@ -71,6 +85,6 @@ ${skipped.rows.map(([tool, when, why]) => `| ${clear(tool)} | ${clear(when)} | $
 `;
 
 await mkdir(path.dirname(OUT), { recursive: true });
-await writeFile(OUT, md);
+await writeFile(OUT, correct(md));
 console.log(`wrote ${path.relative(ROOT, OUT)} (audited ${audited}; ${useDaily.rows.length} daily, ${adopted.rows.length} adopted, ${skipped.rows.length} skipped)`);
 if (/Notion|master doc \d|issue #\d/.test(md)) throw new Error('clearance leak: private reference survived');
