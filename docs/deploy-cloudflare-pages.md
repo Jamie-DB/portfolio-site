@@ -73,6 +73,18 @@ Why it was not optional. LinkedIn blocks the whole `pages.dev` zone, which is sh
 
 To repeat the move for a different domain: **Custom domains** tab, **Set up a custom domain**, enter the name. If the DNS zone is already on Cloudflare it wires the CNAME itself; if the registrar holds DNS, add a `CNAME` to `jamiebrown.pages.dev` there instead. Then change `SITE_URL`, redeploy, and re-run the URL swap everywhere it has been published: the CV PDF, the LinkedIn profile, posts and articles, and the hub.
 
+## 6b. Retiring the old subdomain
+
+Attaching a custom domain does not stop the `*.pages.dev` URL serving. It kept answering 200 on every path, which leaves two full copies of the site for a search engine to choose a canonical between, and never tells anyone holding an old link that it moved.
+
+The fix is `functions/_middleware.js`, a Pages Function that 301s the bare production subdomain to the same path on the custom domain. Added Sept 8, 2026.
+
+It is a Function and not a line in `_redirects` because a `_redirects` source is matched as a path and never sees the hostname. A rule written as a full URL is accepted, deployed and silently does nothing. That was tried against the live site first and it stayed 200.
+
+The match is exact on `jamiebrown.pages.dev`, so preview deploys on `<branch>.jamiebrown.pages.dev` still serve normally and stay reviewable. Change both hostname constants at the top of that file if the domain moves again.
+
+Check it with `curl -sI https://jamiebrown.pages.dev/cv/`, which should show a 301 and a `location` on the custom domain.
+
 ## 7. Report back to the hub
 
 Once the production URL is live, the hub's issue that is blocked on it needs the URL. The Sept 8, 2026 domain move is the second run of that issue, since the URL propagates to the CV PDF, the LinkedIn profile, and anything already published.
