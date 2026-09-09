@@ -31,6 +31,7 @@ What was delegated:
 
 ## Current shortcomings
 
+- The redirect from the old `pages.dev` subdomain to the custom domain runs as a Cloudflare Pages Function, because a `_redirects` source is matched as a path and cannot see the hostname. That puts a Worker in front of every request on a site that is otherwise nothing but static files. Under review since Sept 8, 2026: the alternative is to accept two live domains and drop the Function.
 - The CV page is a hand-carried derivative of the master document with a clearance pass, not a generated one. When the master document changes, the carry has to be redone by hand, and nothing detects drift.
 - No automated tests beyond the contrast check and the sync script's leak check. The build script itself is untested.
 - The screen recording slot and the meta case study slot on the "How I build software now" page are empty HTML comments.

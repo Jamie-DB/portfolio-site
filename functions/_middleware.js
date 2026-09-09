@@ -1,3 +1,8 @@
+// UNDER REVIEW as of Sept 8, 2026. Live, not settled. This file is the only
+// runtime code the site has, and the alternative under consideration is to
+// drop it and accept two live domains. See docs/deploy-cloudflare-pages.md
+// section 6b before building anything else on top of it.
+//
 // The site moved to jamiebrown.engineer. Its old Cloudflare Pages subdomain
 // still answers on every path, so send it on rather than leaving two live
 // copies for a search engine to choose between.

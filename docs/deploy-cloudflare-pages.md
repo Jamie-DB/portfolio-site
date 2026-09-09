@@ -73,7 +73,9 @@ Why it was not optional. LinkedIn blocks the whole `pages.dev` zone, which is sh
 
 To repeat the move for a different domain: **Custom domains** tab, **Set up a custom domain**, enter the name. If the DNS zone is already on Cloudflare it wires the CNAME itself; if the registrar holds DNS, add a `CNAME` to `jamiebrown.pages.dev` there instead. Then change `SITE_URL`, redeploy, and re-run the URL swap everywhere it has been published: the CV PDF, the LinkedIn profile, posts and articles, and the hub.
 
-## 6b. Retiring the old subdomain
+## 6b. Retiring the old subdomain (under review)
+
+**Status: under review as of Sept 8, 2026. Live, not settled.** The open question is whether the redirect is worth what it costs. It puts a Pages Function in front of every request on a site that otherwise ships nothing but static files, and running two domains may be the cheaper trade. Leave it in place until that call is made.
 
 Attaching a custom domain does not stop the `*.pages.dev` URL serving. It kept answering 200 on every path, which leaves two full copies of the site for a search engine to choose a canonical between, and never tells anyone holding an old link that it moved.
 
