@@ -67,6 +67,11 @@ const FORBIDDEN = [
   // House style: September abbreviates to Sept, every other month to three
   // letters. Synced content is normalized in scripts/sync-sources.mjs.
   [/\bSep\b/, 'September abbreviated Sep rather than Sept'],
+  // No phone number on the public site. Email, LinkedIn and GitHub only. The
+  // hub's CV carries one, so a re-carry from data/master-document.md is the
+  // way it would get in. Both the specific number and the general shape.
+  [/\b636\D{0,3}584\D{0,3}5357\b/, 'a phone number'],
+  [/\b\d{3}\D\d{3}\D\d{4}\b/, 'something shaped like a phone number'],
   // Local model hosting was investigated and never bought or set up. Nothing
   // on a public surface may imply otherwise.
   [/\b(ollama|qwen)\b/i, 'a local model stack that was never set up'],
