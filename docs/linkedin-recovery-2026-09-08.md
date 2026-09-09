@@ -43,7 +43,7 @@ If Post Inspector shows an error or the old content, stop and recheck the four p
 
 **To delete:** the post's `⋯` menu → Delete post → confirm.
 
-**To repost:** paste the new text from `artifacts/linkedin/post-01-adoption-curve-announce.md` with the URL at line 56 swapped to `jamiebrown.engineer`. Paste the URL, wait for the card to attach, then remove the raw URL from the text if you prefer the card alone. Post.
+**To repost:** paste the new text from `artifacts/linkedin/post-01-adoption-curve-announce.md` with the URL at line 56 swapped to `https://jamiebrown.engineer`. Paste the URL, wait for the card to attach, then remove the raw URL from the text if you prefer the card alone. Post.
 
 **If you edit instead:** `⋯` → Edit post, remove the URL entirely, save, reopen, re-add the new URL, wait for the card, save again. Verify the card points at the new domain before you walk away.
 
@@ -58,7 +58,7 @@ Open the article → Edit → change both → Publish. The article keeps its exi
 From `artifacts/linkedin/linkedin-rewrite.md`:
 
 - **Featured** (line 183): remove the old link, add `https://jamiebrown.engineer`. Featured items scrape their own preview, so check it renders before moving on.
-- **Projects entry** (line 181): the entry's *name* is the literal text `jamiebrown.pages.dev`. That is a rename, not just a link swap. Use `jamiebrown.engineer` for both the name and the link.
+- **Projects entry** (line 181): the entry's *name* is the literal text `jamiebrown.pages.dev`. That is a rename, not just a link swap. Use `jamiebrown.engineer` as the name and `https://jamiebrown.engineer` as the link.
 - **Contact info → Website**: if the old URL is there, swap it. This one is easy to forget because it is behind a modal.
 - **About section**: check for the URL as plain text.
 

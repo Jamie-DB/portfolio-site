@@ -67,7 +67,7 @@ All under the project's **Settings**.
 
 ## 6. Custom domain
 
-Done Sept 8, 2026: production is `jamiebrown.engineer`.
+Done Sept 8, 2026: production is `https://jamiebrown.engineer`.
 
 Why it was not optional. LinkedIn blocks the whole `pages.dev` zone, which is shared with enough phishing to have earned it. A link to `jamiebrown.pages.dev` in a post, an article, or a message shows readers a "Malicious Website Suspected" interstitial instead of the site. Nothing about this site caused that and there is nothing to appeal. A domain we own is the only fix.
 
