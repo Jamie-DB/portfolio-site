@@ -16,7 +16,7 @@ Last audited: Sept 5, 2026
 | Database-backed tracking via MCP | Submission, feedback, and design-doc tracking behind an MCP integration. |
 | Plannotator | Annotation review loop over plans and diffs, so review comments come back into the session instead of living in a chat scroll. |
 | git and GitHub issues | Issues are the review trail, not a formality. Findings get issue numbers, and the closing commit references them. LFS for game assets. |
-| cmux | Non-repo work, and anything a single terminal instance can do. Still in the rotation and deliberately scoped rather than replaced, which is why it is NOT in the skipped column below. Standing gripe: it packages its own Claude Code binary instead of working with the first-party one. |
+| cmux | Non-repo work, and anything a single terminal instance can do. Still in the rotation and deliberately scoped rather than replaced, which is why it is NOT in the skipped column below. |
 | Cloudflare Pages and wrangler | Deploy target for static sites. Already hosting the annual review site and the course platform. |
 
 ## Just adopted
