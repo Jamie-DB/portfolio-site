@@ -359,15 +359,6 @@ async function main() {
     const from = path.join(SRC, dir);
     if (await exists(from)) await cp(from, path.join(OUT, dir), { recursive: true });
   }
-  // The site moved to jamiebrown.engineer. The old Pages subdomain still
-  // serves every URL, so send it on rather than leaving two live copies for a
-  // search engine to pick between. Named deploy previews keep their own
-  // subdomains and are not matched here.
-  await writeFile(path.join(OUT, '_redirects'), [
-    'https://jamiebrown.pages.dev/* https://jamiebrown.engineer/:splat 301',
-    '',
-  ].join('\n'));
-
   // Cloudflare Pages reads _headers from the output directory.
   await writeFile(path.join(OUT, '_headers'), [
     '/fonts/*',
