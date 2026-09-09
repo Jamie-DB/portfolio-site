@@ -18,6 +18,7 @@ What I decided or corrected:
 - The palette went back and forth, and both calls were mine. I first reversed the agent's colorblind-first default so red and green would lead, because the tools use them. After seeing both palettes side by side I reversed again: the colorblind palette of blue and plum is the default on first visit, with the standard red and green one toggle away.
 - I moved the display controls out of the footer into a fixed corner after the prototype buried them at the bottom of a long page.
 - The CV page renders from my master document rather than from the one-page CV, at my direction. I ruled out the non-engineering roles.
+- The downloadable PDF is a web variant with my phone number removed, separate from the copies I send to employers. The pages never carried it and, since Sept 8, 2026, neither does the download.
 - I confirmed the containment paragraph on the audit page as my actual reasoning and added a paragraph about why a tool that makes branch-per-agent the normal path is worth more than its components.
 - After the first full build I said the diff was decoration, since nothing was ever removed, and asked for the site to lean all the way in. That produced the pull-request frame: the state marker, the files-changed nav with real counts, Home as the newest commit with honest removals, the CV as a commit log, and a footer of checks the build actually runs.
 - I asked for changed lines to tint their text the way a diff does, in both palettes, and for the projects page to read as the documentation inside each repo, which produced the data-flow diagrams.
@@ -51,7 +52,6 @@ What was delegated:
 
 ## What's next
 
-- Re-render and republish the one-page CV PDF against `https://jamiebrown.engineer`.
 - Record and embed the two-minute screen recording.
 - Fill the meta case study slot when the job hunt's numbers are worth showing.
 - Link the LinkedIn adoption-curve article when it publishes.
