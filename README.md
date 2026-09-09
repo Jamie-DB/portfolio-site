@@ -51,7 +51,7 @@ What was delegated:
 
 ## What's next
 
-- Re-render and republish the one-page CV PDF against `jamiebrown.engineer`.
+- Re-render and republish the one-page CV PDF against `https://jamiebrown.engineer`.
 - Record and embed the two-minute screen recording.
 - Fill the meta case study slot when the job hunt's numbers are worth showing.
 - Link the LinkedIn adoption-curve article when it publishes.
