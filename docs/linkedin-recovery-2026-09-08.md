@@ -91,3 +91,4 @@ Different problem, different fix, and this one is worth appealing.
 - Do not post the URL as bare text hoping to dodge the filter. LinkedIn scans post text, not just attached cards.
 - Do not delete and repost more than once. Each cycle costs distribution and looks like churn.
 - Do not take the `pages.dev` URL down. It costs nothing, it still works, and links to it exist in the wild.
+  - Sept 8, 2026, later the same day: it now answers with a 301 to the matching path on `jamiebrown.engineer`, set in `scripts/build.mjs` as a `_redirects` rule. That is not taking it down. Every old link still arrives, and it stops the two copies competing for the canonical.

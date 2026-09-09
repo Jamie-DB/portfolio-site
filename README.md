@@ -36,7 +36,6 @@ What was delegated:
 - The screen recording slot and the meta case study slot on the "How I build software now" page are empty HTML comments.
 - The audit page is meant to link to a LinkedIn article for the full adoption-curve argument. The article is not published yet, so there is no link.
 - The fixed display controls overlap body text on a phone.
-- The one-page CV PDF served at `/assets/Jamie_Brown_CV.pdf` was rendered against the old `pages.dev` URL. It has to be re-rendered at the hub with `jamiebrown.engineer` and republished here. Until that lands, the PDF points readers at a URL LinkedIn blocks.
 - Fonts are subset to Latin only. Departure Mono is vendored and unused, kept for a future type comparison.
 - The "Last built" date in the footer is the build machine's UTC date.
 - One stylesheet with hand-managed specificity. Fine at this size, and it will not stay fine if the site grows.
