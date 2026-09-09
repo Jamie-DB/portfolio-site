@@ -1,6 +1,6 @@
 # Deploying this site on Cloudflare Pages
 
-Step by step, from a repo on GitHub to a live `*.pages.dev` URL that redeploys on every push to `main`. Written Sept 7, 2026 against the current Cloudflare dashboard. Nothing here needs `wrangler` on your machine.
+Step by step, from a repo on GitHub to a live site that redeploys on every push to `main`. Written Sept 7, 2026 against the current Cloudflare dashboard, revised Sept 8, 2026 when the site moved to a custom domain. Production is `https://jamiebrown.engineer`. The `jamiebrown.pages.dev` URL still resolves and is what preview deploys use. Nothing here needs `wrangler` on your machine.
 
 ## What the repo already provides
 
@@ -34,7 +34,7 @@ Under **Environment variables** add one for both Production and Preview:
 
 | Variable | Value | Why |
 |---|---|---|
-| `SITE_URL` | `https://jamiebrown.pages.dev` | The build writes canonical and Open Graph URLs from this. Set it to whatever the project name resolves to. If you later add a custom domain, change it here and redeploy |
+| `SITE_URL` | `https://jamiebrown.engineer` | The build writes canonical and Open Graph URLs from this. Production must carry the custom domain, or every canonical tag points at a URL LinkedIn blocks. Change it here and redeploy whenever the domain changes |
 
 `NODE_VERSION` is not needed because of `.node-version`, but setting it to `22` as well does no harm.
 
@@ -46,7 +46,7 @@ Open the deployment URL and confirm:
 
 - Every nav link resolves and the dark mode and palette toggles work.
 - A made-up path such as `/nothing/` shows the site's own 404 page, not Cloudflare's.
-- `curl -sI https://jamiebrown.pages.dev/fonts/commit-mono-latin-400-normal.woff2 | grep -i cache-control` shows `max-age=31536000, immutable`. That proves `_headers` was picked up.
+- `curl -sI https://jamiebrown.engineer/fonts/commit-mono-latin-400-normal.woff2 | grep -i cache-control` shows `max-age=31536000, immutable`. That proves `_headers` was picked up.
 - View source on the home page and confirm `<link rel="canonical">` points at the real URL, not a placeholder.
 
 ## 4. Settings worth checking once
@@ -65,10 +65,14 @@ All under the project's **Settings**.
 - A failed check fails the build, and the previous deploy stays live. The build log shows which check failed and on which page.
 - Rollback: **Deployments** tab, pick an older successful build, **Rollback to this deployment**.
 
-## 6. Custom domain, if one lands later
+## 6. Custom domain
 
-**Custom domains** tab, **Set up a custom domain**, enter the name. If the DNS zone is already on Cloudflare it wires the CNAME itself. Then change `SITE_URL` to the new domain, redeploy, and note that the URL on the CV and LinkedIn has to be updated a second time.
+Done Sept 8, 2026: production is `jamiebrown.engineer`.
+
+Why it was not optional. LinkedIn blocks the whole `pages.dev` zone, which is shared with enough phishing to have earned it. A link to `jamiebrown.pages.dev` in a post, an article, or a message shows readers a "Malicious Website Suspected" interstitial instead of the site. Nothing about this site caused that and there is nothing to appeal. A domain we own is the only fix.
+
+To repeat the move for a different domain: **Custom domains** tab, **Set up a custom domain**, enter the name. If the DNS zone is already on Cloudflare it wires the CNAME itself; if the registrar holds DNS, add a `CNAME` to `jamiebrown.pages.dev` there instead. Then change `SITE_URL`, redeploy, and re-run the URL swap everywhere it has been published: the CV PDF, the LinkedIn profile, posts and articles, and the hub.
 
 ## 7. Report back to the hub
 
-Once the production URL is live, the hub's issue that is blocked on it needs the URL, plus the note that a custom domain would mean running that issue again.
+Once the production URL is live, the hub's issue that is blocked on it needs the URL. The Sept 8, 2026 domain move is the second run of that issue, since the URL propagates to the CV PDF, the LinkedIn profile, and anything already published.

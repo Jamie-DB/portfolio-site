@@ -15,10 +15,14 @@ const OUT = path.resolve(ROOT, process.env.OUT_DIR || 'dist');
 
 const SITE = {
   name: 'Jamie Brown',
-  // The pages.dev URL is a placeholder until Cloudflare assigns the real one.
-  url: (process.env.SITE_URL || 'https://jamiebrown.pages.dev').replace(/\/$/, ''),
+  // Production is the custom domain. Cloudflare sets SITE_URL; this default is
+  // what a local build and a preview deploy fall back to.
+  url: (process.env.SITE_URL || 'https://jamiebrown.engineer').replace(/\/$/, ''),
   repo: 'https://github.com/Jamie-DB/portfolio-site',
   buildlog: 'https://github.com/Jamie-DB/portfolio-site/blob/main/BUILDLOG.md',
+  // Share card only. The site itself still has no images on any page.
+  ogImage: '/assets/comic-recursion.png',
+  ogImageAlt: 'A flat illustration of a robot in a beret painting a portrait of a person at an easel captioned "AI-assisted programmer art." The person, holding a coffee, says: What did I tell you about recursion!?',
 };
 
 // The PR state. Open means available. Flip to Merged when the role lands.
@@ -46,6 +50,7 @@ const NAV = [
   { href: '/ai-tooling-audit/', label: 'AI tooling audit' },
   { href: '/cv/', label: 'CV and contact' },
   { href: '/projects/', label: 'Projects' },
+  { href: '/programmer-art/', label: 'Programmer art' },
 ];
 
 // Never on a public surface. Scanned against every page's main content.
@@ -62,8 +67,11 @@ const FORBIDDEN = [
   // hub's analyst voice and it reads as someone else describing him, which
   // is jarring a paragraph after "I". Attribution lines say "Jamie Brown"
   // in full and are allowed.
-  [/\b(he|him|his|himself)\b/i, 'third-person voice on a first-person page'],
-  [/\bJamie(?:'s|\u2019s|\s+(?!Brown\b))/, 'Jamie named in the third person rather than "I"'],
+  // Scoped to prose. Comic captions carry dialogue, and the characters in the
+  // comics are not me, so a pronoun inside a figcaption is not the leak this
+  // rule is looking for.
+  [/\b(he|him|his|himself)\b/i, 'third-person voice on a first-person page', 'prose'],
+  [/\bJamie(?:'s|\u2019s|\s+(?!Brown\b))/, 'Jamie named in the third person rather than "I"', 'prose'],
   // House style: September abbreviates to Sept, every other month to three
   // letters. Synced content is normalized in scripts/sync-sources.mjs.
   [/\bSep\b/, 'September abbreviated Sep rather than Sept'],
@@ -179,6 +187,11 @@ function layout({ meta, body }, stats, checks) {
   <meta property="og:title" content="${esc(title)}">
   <meta property="og:description" content="${esc(meta.description)}">
   <meta property="og:url" content="${url}">
+  <meta property="og:image" content="${SITE.url + SITE.ogImage}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="675">
+  <meta property="og:image:alt" content="${esc(SITE.ogImageAlt)}">
+  <meta name="twitter:card" content="summary_large_image">
   <script>(function(){try{var d=document.documentElement,t=localStorage.getItem('theme'),p=localStorage.getItem('palette');if(t)d.setAttribute('data-theme',t);if(p)d.setAttribute('data-palette',p)}catch(e){}})();</script>
   <link rel="stylesheet" href="/css/site.css">
 </head>
@@ -314,8 +327,9 @@ function scan(pages) {
   let semicolons = 0;
   for (const p of pages) {
     const text = p.body.replace(/<!--[\s\S]*?-->/g, '');
-    for (const [re, why] of FORBIDDEN) {
-      if (re.test(text)) hits.push(`${p.meta.path}: ${why} (${re})`);
+    const prose = text.replace(/<figcaption>[\s\S]*?<\/figcaption>/g, '');
+    for (const [re, why, scope] of FORBIDDEN) {
+      if (re.test(scope === 'prose' ? prose : text)) hits.push(`${p.meta.path}: ${why} (${re})`);
     }
     for (const para of text.match(/<p[^>]*>[\s\S]*?<\/p>/g) || []) {
       if (/;/.test(para.replace(/&[a-z#0-9]+;/g, ''))) { semicolons++; hits.push(`${p.meta.path}: semicolon in prose`); }

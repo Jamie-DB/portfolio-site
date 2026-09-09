@@ -1,6 +1,6 @@
 # portfolio-site
 
-Jamie Brown's portfolio site. Five pages that make one argument, framed as a pull request. Static, built with Claude Code and reviewed by hand.
+Jamie Brown's portfolio site. Five pages that make one argument, framed as a pull request, and a sixth for the comics. Static, built with Claude Code and reviewed by hand.
 
 ## What it does and why I built it
 
@@ -36,7 +36,7 @@ What was delegated:
 - The screen recording slot and the meta case study slot on the "How I build software now" page are empty HTML comments.
 - The audit page is meant to link to a LinkedIn article for the full adoption-curve argument. The article is not published yet, so there is no link.
 - The fixed display controls overlap body text on a phone.
-- The one-page CV PDF still carries the line "case studies available on request." Re-rendering it with this site's URL happens after the URL exists.
+- The one-page CV PDF served at `/assets/Jamie_Brown_CV.pdf` was rendered against the old `pages.dev` URL. It has to be re-rendered at the hub with `jamiebrown.engineer` and republished here. Until that lands, the PDF points readers at a URL LinkedIn blocks.
 - Fonts are subset to Latin only. Departure Mono is vendored and unused, kept for a future type comparison.
 - The "Last built" date in the footer is the build machine's UTC date.
 - One stylesheet with hand-managed specificity. Fine at this size, and it will not stay fine if the site grows.
@@ -46,10 +46,12 @@ What was delegated:
 - The CV's folds need JavaScript to print open. Without it, a printed CV shows only the summary lines of folded sections.
 - The split view on Home and the blame gutter on the working model are desktop-only. On narrow screens the hunk stays unified and the blame note drops onto its own line.
 - The screenshot slots on the projects page and the recording slot on the working model are still empty comments.
+- The comics on the programmer-art page are numbered 3, 4 and 7 in their source files. The missing numbers were never exported, so the set has gaps nobody but me can see.
+- The page claims the comics were arrived at by iteration rather than selection, which is true, but the rounds themselves are in the session logs and have never been pulled out. Every other claim on this site has a receipt behind it and this one does not yet.
 
 ## What's next
 
-- Connect the repo to Cloudflare Pages and report the URL back.
+- Re-render and republish the one-page CV PDF against `jamiebrown.engineer`.
 - Record and embed the two-minute screen recording.
 - Fill the meta case study slot when the job hunt's numbers are worth showing.
 - Link the LinkedIn adoption-curve article when it publishes.
@@ -57,7 +59,11 @@ What was delegated:
 
 ## Deploying
 
-Cloudflare Pages with the Git integration. The step-by-step guide, including the settings to check, is in [docs/deploy-cloudflare-pages.md](docs/deploy-cloudflare-pages.md).
+Live at [jamiebrown.engineer](https://jamiebrown.engineer), on Cloudflare Pages with the Git integration. The step-by-step guide, including the settings to check, is in [docs/deploy-cloudflare-pages.md](docs/deploy-cloudflare-pages.md).
+
+The site launched on `jamiebrown.pages.dev` and moved to the custom domain on Sept 8, 2026, because LinkedIn blocks the entire `pages.dev` zone and showed readers a malicious-site warning instead of the site. The `pages.dev` URL still resolves; canonical and Open Graph tags point at the custom domain.
+
+The move has two hand-off docs: [docs/linkedin-recovery-2026-09-08.md](docs/linkedin-recovery-2026-09-08.md) for getting the LinkedIn surfaces onto the new URL, and [docs/carry-forward-domain-move-2026-09-08.md](docs/carry-forward-domain-move-2026-09-08.md) for the hub changes it forces.
 
 ## Build and run
 
