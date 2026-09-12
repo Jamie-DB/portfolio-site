@@ -132,6 +132,11 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2.5rem 0; }
 .files a:hover { color: var(--ink); text-decoration: underline; }
 .files [aria-current="page"] { color: var(--ink); font-weight: 600; white-space: nowrap; }
 .files .stat { font-weight: 400; font-size: 0.8125rem; }
+/* The one nav item that is about drawing gets the pixel face. Departure Mono
+   runs small, so it needs the size bump to sit on the same line as the rest. */
+.files .art { font-family: 'Departure Mono', var(--mono); font-size: 0.9375rem; letter-spacing: 0.04em; }
+.files .art .stat { font-family: var(--mono); font-size: 0.8125rem; letter-spacing: 0; }
+[data-mono="departure"] .files .art { font-family: 'Commit Mono', ui-monospace, monospace; font-size: 0.8125rem; letter-spacing: 0; }
 .stat .plus { color: var(--add); }
 .stat .minus { color: var(--del); }
 

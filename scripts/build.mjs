@@ -47,10 +47,10 @@ const PALETTE = process.env.PALETTE || ''; // '' | 'standard'
 const NAV = [
   { href: '/', label: 'Home' },
   { href: '/how-i-build/', label: 'How I build software now' },
-  { href: '/ai-tooling-audit/', label: 'AI tooling audit' },
+  { href: '/programmer-art/', label: 'Programmer art', cls: 'art' },
   { href: '/cv/', label: 'CV and contact' },
+  { href: '/ai-tooling-audit/', label: 'AI tooling audit' },
   { href: '/projects/', label: 'Projects' },
-  { href: '/programmer-art/', label: 'Programmer art' },
 ];
 
 // Never on a public surface. Scanned against every page's main content.
@@ -135,9 +135,10 @@ function nav(current, stats) {
   return summary + '\n      ' + NAV.map((n) => {
     const s = stats[n.href] || { add: 0, del: 0 };
     const stat = statSpan(s);
+    const cls = n.cls ? ` class="${n.cls}"` : '';
     return n.href === current
-      ? `<span aria-current="page">${esc(n.label)}${stat}</span>`
-      : `<a href="${n.href}">${esc(n.label)}${stat}</a>`;
+      ? `<span${cls} aria-current="page">${esc(n.label)}${stat}</span>`
+      : `<a href="${n.href}"${cls}>${esc(n.label)}${stat}</a>`;
   }).join('\n      ');
 }
 
