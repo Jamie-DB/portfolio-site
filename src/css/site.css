@@ -379,7 +379,7 @@ ins b, .model ins { font-weight: inherit; }
 
 @media print {
   :root { --paper: #fff; --ink: #000; --ink-2: #444; --rule: #999; --add-bg: #eef; --del-bg: #fee; --cite: #14349b; }
-  .files, .controls { display: none; }
+  .files, .controls, .share button { display: none; }
   .frame { padding: 0 0 0 var(--gutter); max-width: none; }
   .frame > main, .frame > .colophon, .frame > .pr { max-width: none; }
   a { text-decoration: none; }
@@ -594,3 +594,14 @@ details.fold > p:first-of-type { margin-top: 0.4rem; }
 .artifact { margin: 1rem 0 1.5rem; }
 .artifact img { display: block; max-width: 100%; height: auto; border: 1px solid var(--rule); }
 .artifact figcaption { font-family: var(--mono); font-size: 0.75rem; color: var(--ink-2); margin-top: 0.4rem; }
+
+/* The share line under a comic. The permalink is the feature: a page of its
+   own whose card is the drawing, so pasting it anywhere that unfurls a URL
+   shows the comic and not the masthead. The button is revealed by the script
+   and opens the share sheet, or copies the link where there is none. */
+.share { display: block; margin-top: 0.35rem; }
+.share a { text-decoration: none; }
+.share a:hover { text-decoration: underline; }
+.share button { font: inherit; color: var(--ink-2); background: none; border: 1px solid var(--rule); padding: 0.1em 0.5em; margin-left: 0.5rem; cursor: pointer; }
+.share button:hover { color: var(--ink); border-color: var(--ink); }
+.share-nav { font-family: var(--mono); font-size: 0.75rem; color: var(--ink-2); display: flex; gap: 1.5rem; margin: 0 0 1.5rem; }
