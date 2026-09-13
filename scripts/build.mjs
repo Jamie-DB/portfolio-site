@@ -4,7 +4,8 @@
 // The site is framed as a pull request. The masthead is the PR header, the
 // nav is the files-changed list with real +/- counts, and the footer reports
 // the checks this build ran. A failed check fails the build.
-import { readFile, writeFile, mkdir, cp, readdir, rm, access } from 'node:fs/promises';
+import { readFile, writeFile, mkdir, cp, readdir, rm, access, rename } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
 import path from 'node:path';
 import { marked } from 'marked';
 import { runContrast } from './contrast.mjs';
@@ -12,6 +13,14 @@ import { runContrast } from './contrast.mjs';
 const ROOT = path.resolve(import.meta.dirname, '..');
 const SRC = path.join(ROOT, 'src');
 const OUT = path.resolve(ROOT, process.env.OUT_DIR || 'dist');
+
+// The stylesheet and the script ship under a content-hashed name, filled in by
+// fingerprint() before any page renders. Without it their URLs never change,
+// so Cloudflare's four-hour browser TTL holds a returning reader on the old
+// CSS and the old script while the new HTML is already live: the share line
+// lands as a run-on caption with no button. Hashed names make every change a
+// new URL, which is what lets the files be cached for a year.
+const ASSETS = { css: '/css/site.css', js: '/js/theme.js' };
 
 const SITE = {
   name: 'Jamie Brown',
@@ -218,7 +227,7 @@ function layout({ meta, body }, stats, checks) {
   <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
   <script>(function(){try{var d=document.documentElement,t=localStorage.getItem('theme'),p=localStorage.getItem('palette');if(t)d.setAttribute('data-theme',t);if(p)d.setAttribute('data-palette',p)}catch(e){}})();</script>
-  <link rel="stylesheet" href="/css/site.css">
+  <link rel="stylesheet" href="${ASSETS.css}">
 </head>
 <body${bodyClass}>
   <div class="frame">
@@ -244,7 +253,7 @@ ${body}
     <button type="button" data-control="theme" aria-pressed="false">Dark mode</button>
     <button type="button" data-control="palette" aria-pressed="false">Standard palette</button>
   </div>
-  <script src="/js/theme.js"></script>
+  <script src="${ASSETS.js}"></script>
 </body>
 </html>
 `);
@@ -430,6 +439,19 @@ async function writePage(meta, html) {
   console.log(`  ${meta.path}${meta.stats.add || meta.stats.del ? `  +${meta.stats.add} -${meta.stats.del}` : ''}`);
 }
 
+// Rename the stylesheet and the script in the output to include a hash of
+// their contents, and point ASSETS at the new URLs. Must run after the copy
+// and before the first page renders.
+async function fingerprint() {
+  for (const [key, dir, file, ext] of [['css', 'css', 'site', 'css'], ['js', 'js', 'theme', 'js']]) {
+    const from = path.join(OUT, dir, `${file}.${ext}`);
+    const hash = createHash('sha256').update(await readFile(from)).digest('hex').slice(0, 8);
+    const name = `${file}.${hash}.${ext}`;
+    await rename(from, path.join(OUT, dir, name));
+    ASSETS[key] = `/${dir}/${name}`;
+  }
+}
+
 async function main() {
   await rm(OUT, { recursive: true, force: true });
   await mkdir(OUT, { recursive: true });
@@ -438,10 +460,22 @@ async function main() {
     const from = path.join(SRC, dir);
     if (await exists(from)) await cp(from, path.join(OUT, dir), { recursive: true });
   }
-  // Cloudflare Pages reads _headers from the output directory.
+  await fingerprint();
+
+  // Cloudflare Pages reads _headers from the output directory. Everything with
+  // a hashed or otherwise stable name is cached for a year. Everything whose
+  // URL can be reused for new bytes must revalidate, or a change to it stays
+  // invisible for four hours: /assets holds the comics and the share cards,
+  // which get replaced in place.
   await writeFile(path.join(OUT, '_headers'), [
     '/fonts/*',
     '  Cache-Control: public, max-age=31536000, immutable',
+    '/css/*',
+    '  Cache-Control: public, max-age=31536000, immutable',
+    '/js/*',
+    '  Cache-Control: public, max-age=31536000, immutable',
+    '/assets/*',
+    '  Cache-Control: public, max-age=0, must-revalidate',
     '/*',
     '  X-Content-Type-Options: nosniff',
     '  Referrer-Policy: strict-origin-when-cross-origin',
