@@ -91,3 +91,32 @@
     });
   }
 })();
+
+// Share. Each comic has a page of its own whose card is the drawing, and the
+// permalink beside the button is that page. Without a script the permalink
+// is the whole feature. With one, the button opens the share sheet where the
+// browser has one and copies the link everywhere else.
+(function () {
+  Array.prototype.forEach.call(document.querySelectorAll('.share'), function (share) {
+    var link = share.querySelector('a');
+    var button = share.querySelector('button');
+    if (!link || !button) return;
+    var url = link.href;
+    var title = share.getAttribute('data-title') || document.title;
+    function copy() {
+      if (!navigator.clipboard) return;
+      navigator.clipboard.writeText(url).then(function () {
+        button.textContent = 'Copied';
+        setTimeout(function () { button.textContent = 'Share'; }, 1500);
+      }, function () {});
+    }
+    button.addEventListener('click', function () {
+      if (!navigator.share) return copy();
+      navigator.share({ title: title, url: url }).catch(function (e) {
+        // Cancelling the sheet is not a failure. Anything else falls back to the clipboard.
+        if (!e || e.name !== 'AbortError') copy();
+      });
+    });
+    button.hidden = false;
+  });
+})();
