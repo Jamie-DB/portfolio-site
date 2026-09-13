@@ -129,6 +129,10 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2.5rem 0; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .pr-title { font-size: 1.125rem; margin: 0 0 0.35rem; display: flex; align-items: baseline; gap: 0.75rem; flex-wrap: wrap; }
 .pr-title .name { font-weight: 600; text-decoration: none; }
+/* The mark sits where a PR shows the author's avatar. Height is tied to the
+   title type so it scales with the masthead and never widens it. Kept inline
+   so the title keeps its text baseline and the state marker stays level. */
+.pr-title .mark { height: 1.5em; width: auto; vertical-align: -0.4em; margin-right: 0.5rem; }
 .pr-title .name:hover { text-decoration: underline; }
 .state { font-size: 0.8125rem; font-weight: 600; white-space: nowrap; }
 .state::before { content: ''; display: inline-block; width: 0.6em; height: 0.6em; border-radius: 50%; background: currentColor; margin-right: 0.4em; vertical-align: 0.05em; }
@@ -338,6 +342,9 @@ ins b, .model ins { font-weight: inherit; }
 }
 .colophon p { margin: 0 0 0.5em; max-width: 34rem; }
 .colophon .checks { color: var(--ink); }
+.colophon .signature { display: block; height: 3rem; width: auto; margin-top: 1.25rem; color: var(--ink); }
+/* 404 gets the faint version, the way a watermark sits under a blank page. */
+.ghost { display: block; width: min(100%, 22rem); height: auto; margin: 2rem 0 0; color: var(--ink); opacity: 0.09; }
 
 /* Display controls. Fixed in the corner so they are reachable from anywhere
    on a long page. Text labels say what pressing does. */

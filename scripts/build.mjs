@@ -20,9 +20,10 @@ const SITE = {
   url: (process.env.SITE_URL || 'https://jamiebrown.engineer').replace(/\/$/, ''),
   repo: 'https://github.com/Jamie-DB/portfolio-site',
   buildlog: 'https://github.com/Jamie-DB/portfolio-site/blob/main/BUILDLOG.md',
-  // Share card only. The site itself still has no images on any page.
-  ogImage: '/assets/comic-recursion.png',
-  ogImageAlt: 'A flat illustration of a robot in a beret painting a portrait of a person at an easel captioned "AI-assisted programmer art." The person, holding a coffee, says: What did I tell you about recursion!?',
+  // Share card, rendered by scripts/share-card.mjs from the mark and the
+  // masthead type. Re-run that script if the mark or the state line changes.
+  ogImage: '/assets/share-card.png',
+  ogImageAlt: 'The human-in-the-loop mark, a person beside a robot, next to the name Jamie Brown and the line: Senior software engineer, Orlando. Remote or hybrid preferred.',
 };
 
 // The PR state. Open to new roles means available. Flip to Merged when the
@@ -39,6 +40,12 @@ const AUTHOR = [
   ['https://www.linkedin.com/in/jdevbrown', 'LinkedIn'],
   ['https://github.com/Jamie-DB', 'GitHub'],
 ];
+
+// The hand-drawn mark signs the colophon. Inlined so its stroke takes the
+// page ink in both themes; the red light stays red.
+const SIGNATURE = (await readFile(path.join(SRC, 'assets', 'hitl-signature.svg'), 'utf8'))
+  .replace('<svg ', '<svg class="signature" role="img" aria-label="Human in the loop, drawn by hand" ')
+  .trim();
 
 // Preview-only switches for side-by-side builds. Never set in production.
 const MONO = process.env.MONO || '';       // '' | 'departure'
@@ -204,16 +211,19 @@ function layout({ meta, body }, stats, checks) {
   <meta property="og:url" content="${url}">
   <meta property="og:image" content="${SITE.url + SITE.ogImage}">
   <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="675">
+  <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="${esc(SITE.ogImageAlt)}">
   <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/assets/favicon.ico" sizes="48x48">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
   <script>(function(){try{var d=document.documentElement,t=localStorage.getItem('theme'),p=localStorage.getItem('palette');if(t)d.setAttribute('data-theme',t);if(p)d.setAttribute('data-palette',p)}catch(e){}})();</script>
   <link rel="stylesheet" href="/css/site.css">
 </head>
 <body${bodyClass}>
   <div class="frame">
     <header class="pr">
-      <p class="pr-title"><a class="name" href="/">${SITE.name}</a> <span class="state open">${STATE.word}</span></p>
+      <p class="pr-title"><a class="name" href="/"><img class="mark" src="/assets/hitl-mark.svg" alt="" width="160" height="128">${SITE.name}</a> <span class="state open">${STATE.word}</span></p>
       <p class="pr-line">${STATE.line}</p>
       <p class="pr-author">${AUTHOR.map(([href, text]) => `<a href="${href}">${text}</a>`).join(' ')}</p>
       <nav class="files" aria-label="Site">
@@ -227,6 +237,7 @@ ${body}
       <p class="checks">${checks}</p>
       <p>Built with Claude Code and reviewed by me. <a href="${SITE.repo}">Source</a> and <a href="${SITE.buildlog}">build log</a> on GitHub.</p>
       <p>Diff colors default to blue and plum, which stay apart for colorblind readers. The standard palette switches to red and green, the way the tools do it.</p>
+      ${SIGNATURE}
     </footer>
   </div>
   <div class="controls" hidden>
