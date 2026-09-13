@@ -46,6 +46,10 @@
   --mono: 'Commit Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   --measure: 38rem;
   --gutter: 3rem;
+  /* The gutter a page reserves can grow (the CV parks its dates in one), but
+     the reading measure and the masthead never do. Sizing reads this, padding
+     reads --gutter. */
+  --gutter-base: 3rem;
   --edge: 1.25rem;
   --body: 1.125rem;
   --lh: 1.55;
@@ -100,10 +104,15 @@ body {
   font-optical-sizing: auto;
 }
 .frame {
+  /* The gutter is inside this max-width on purpose: it is what keeps a page
+     with a wide gutter starting its text on the same pixel as every other
+     page. The children below are what stop it from widening the content. */
   max-width: calc(var(--measure) + var(--gutter) + 2 * var(--edge));
   margin: 0 auto;
   padding: 1.5rem var(--edge) 4rem calc(var(--edge) + var(--gutter));
 }
+.frame > main, .frame > .colophon { max-width: calc(var(--measure) + var(--gutter-base) + 2 * var(--edge)); }
+.frame > .pr { max-width: calc(var(--measure) + 2 * var(--gutter-base) + 2 * var(--edge)); }
 main { display: block; }
 p { margin: 0 0 1em; }
 a { color: inherit; text-decoration: underline; text-underline-offset: 0.15em; text-decoration-thickness: 1px; }
@@ -116,7 +125,7 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 2.5rem 0; }
 /* PR header. The site is framed as an open pull request: the name is the
    title, the state marker is availability, the nav is the files-changed list
    with real counts from each page. */
-.pr { font-family: var(--mono); margin: 0 0 3rem calc(-1 * var(--gutter)); }
+.pr { font-family: var(--mono); margin: 0 0 3rem calc(-1 * min(var(--gutter), var(--gutter-base))); }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .pr-title { font-size: 1.125rem; margin: 0 0 0.35rem; display: flex; align-items: baseline; gap: 0.75rem; flex-wrap: wrap; }
 .pr-title .name { font-weight: 600; text-decoration: none; }
@@ -365,6 +374,7 @@ ins b, .model ins { font-weight: inherit; }
   :root { --paper: #fff; --ink: #000; --ink-2: #444; --rule: #999; --add-bg: #eef; --del-bg: #fee; --cite: #14349b; }
   .files, .controls { display: none; }
   .frame { padding: 0 0 0 var(--gutter); max-width: none; }
+  .frame > main, .frame > .colophon, .frame > .pr { max-width: none; }
   a { text-decoration: none; }
   * { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
 }
@@ -433,7 +443,11 @@ ins b, .model ins { font-weight: inherit; }
 /* CV: experience is a commit log on a rail. Dates sit in a wider gutter on
    desktop and above the subject line on a phone. */
 body.cv { --rail: 1rem; }
-@media (min-width: 40.01rem) { body.cv { --gutter: 12.5rem; } }
+/* The date gutter only earns its place once the frame can still centre with
+   it. Below that the CV would stop centring and inset its content instead,
+   which is what made it the one page that did not line up when you click
+   through. 68rem is measure + gutter + edges, the width where it just fits. */
+@media (min-width: 68rem) { body.cv { --gutter: 12.5rem; } }
 @media (max-width: 40rem) { body.cv { --rail: 0.875rem; } }
 .cv h2 { margin-top: 3.5rem; }
 .cv h3 { font-size: 1.125rem; margin: 2.25rem 0 0.25rem; }
@@ -448,7 +462,7 @@ body.cv { --rail: 1rem; }
 .commit + .commit { border-top: 1px solid var(--rule); padding-top: 1.5rem; }
 .commit.head h3 { color: var(--add-ink); }
 .commit .meta { margin-bottom: 0.75rem; }
-@media (min-width: 40.01rem) {
+@media (min-width: 68rem) {
   .commit .when { position: absolute; left: calc(-1 * var(--gutter)); width: calc(var(--gutter) - var(--rail) - 1rem); text-align: right; top: 0.25em; margin: 0; }
 }
 .cv ul { padding-left: 1.25rem; }
@@ -509,11 +523,10 @@ details.fold > p:first-of-type { margin-top: 0.4rem; }
 .tag small { color: var(--ink-2); font-size: 0.75rem; margin-left: 0.35em; }
 .cv .personal h3::after { content: 'personal work'; font-family: var(--mono); font-size: 0.75rem; font-weight: 400; color: var(--cite); margin-left: 0.75em; vertical-align: 0.15em; }
 
-/* Author line under the PR title, and the files-changed summary above the list. */
+/* Author line under the PR title. */
 .pr-author { font-size: 0.8125rem; color: var(--ink-2); margin: 0 0 1rem; }
 .pr-author a { text-decoration: none; color: var(--ink-2); margin-right: 1rem; white-space: nowrap; }
 .pr-author a:hover { color: var(--ink); text-decoration: underline; }
-.files-summary { flex-basis: 100%; color: var(--ink-2); }
 
 /* Blame on the working model: which items changed since the model was
    written, and when. In the right margin on a wide screen, on its own line
@@ -565,6 +578,9 @@ details.fold > p:first-of-type { margin-top: 0.4rem; }
 .ruler-axis li::before { content: ''; position: absolute; left: 50%; top: -0.55rem; height: 0.4rem; border-left: 1px solid var(--rule); }
 .ruler-axis li.now { color: var(--add); transform: translateX(-100%); }
 .ruler-axis li.now::before { left: 100%; border-color: var(--add); }
+/* The last year before "now" runs into it on a phone. The bars carry the
+   dates anyway, and every entry below states its own. */
+@media (max-width: 40rem) { .ruler-axis li.tight { display: none; } }
 .commit { scroll-margin-top: 1rem; }
 
 /* An artifact: a screenshot of the running thing, captioned in the machine voice. */

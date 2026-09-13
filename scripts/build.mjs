@@ -44,13 +44,23 @@ const MONO = process.env.MONO || '';       // '' | 'departure'
 const THEME = process.env.THEME || '';     // '' | 'dark' | 'light'
 const PALETTE = process.env.PALETTE || ''; // '' | 'standard'
 
+// The file list, one line. A repo keeps its prose in docs/, so the two long
+// pieces sit in that directory and are reached from its index rather than
+// from here. The folder row carries their counts rolled up, the way a
+// collapsed directory reports the diff underneath it.
 const NAV = [
   { href: '/', label: 'Home' },
-  { href: '/how-i-build/', label: 'How I build software now' },
+  { href: '/docs/', label: 'docs/', holds: ['/docs/how-i-build/', '/docs/ai-tooling-audit/'] },
   { href: '/programmer-art/', label: 'Programmer art', cls: 'art' },
   { href: '/cv/', label: 'CV and contact' },
-  { href: '/ai-tooling-audit/', label: 'AI tooling audit' },
   { href: '/projects/', label: 'Projects' },
+];
+
+// Pages that moved when the writing was consolidated under docs/. Both URLs
+// were public before the move, so the old paths keep answering.
+const REDIRECTS = [
+  ['/how-i-build', '/docs/how-i-build/'],
+  ['/ai-tooling-audit', '/docs/ai-tooling-audit/'],
 ];
 
 // Never on a public surface. Scanned against every page's main content.
@@ -126,17 +136,20 @@ function statSpan(s) {
   return parts.length ? ` <span class="stat">${parts.join(' ')}</span>` : '';
 }
 
+// One row per entry. There is no "N files changed" total above the list: it was
+// accurate and it cluttered the nav, which is the one thing on the page a
+// reader has to get through rather than read.
 function nav(current, stats) {
-  const total = NAV.reduce((t, n) => {
-    const s = stats[n.href] || { add: 0, del: 0 };
-    return { add: t.add + s.add, del: t.del + s.del };
-  }, { add: 0, del: 0 });
-  const summary = `<span class="files-summary">${NAV.length} files changed${statSpan(total)}</span>`;
-  return summary + '\n      ' + NAV.map((n) => {
-    const s = stats[n.href] || { add: 0, del: 0 };
+  return NAV.map((n) => {
+    const s = [n.href, ...(n.holds || [])].reduce((t, href) => {
+      const x = stats[href] || { add: 0, del: 0 };
+      return { add: t.add + x.add, del: t.del + x.del };
+    }, { add: 0, del: 0 });
+    // A page inside docs/ keeps the folder marked as the current location.
+    const here = n.href === current || (n.holds || []).includes(current);
     const stat = statSpan(s);
     const cls = n.cls ? ` class="${n.cls}"` : '';
-    return n.href === current
+    return here
       ? `<span${cls} aria-current="page">${esc(n.label)}${stat}</span>`
       : `<a href="${n.href}"${cls}>${esc(n.label)}${stat}</a>`;
   }).join('\n      ');
@@ -266,7 +279,13 @@ function ruler(entries) {
     return `    <li><a href="#${e.id}" title="${esc(e.title)}" class="${late ? 'late' : ''}" style="--from:${pct(e.from)};--to:${pct(e.to)}"><span>${esc(e.short)}</span></a></li>`;
   }).join('\n');
   const ticks = [];
-  for (let y = Math.ceil(start / 5) * 5; y < NOW; y += 5) ticks.push(`    <li style="--at:${pct(y)}">${y}</li>`);
+  for (let y = Math.ceil(start / 5) * 5; y < NOW; y += 5) {
+    // A tick sitting close to the "now" marker collides with it once the axis
+    // is narrow enough. Mark it here and let the stylesheet drop it on a
+    // phone, where the labels are the same size but the axis is half as wide.
+    const tight = (NOW - y) / (end - start) < 0.12 ? ' class="tight"' : '';
+    ticks.push(`    <li${tight} style="--at:${pct(y)}">${y}</li>`);
+  }
   ticks.push(`    <li class="now" style="--at:${pct(NOW)}">now</li>`);
   return `<figure class="ruler" aria-label="Timeline, ${start} to now. Each bar links to its entry below.">\n  <ol class="ruler-rows">\n${rows}\n  </ol>\n  <ol class="ruler-axis" aria-hidden="true">\n${ticks.join('\n')}\n  </ol>\n</figure>\n`;
 }
@@ -305,11 +324,18 @@ function folds(html) {
 async function generated() {
   const audit = await readFile(path.join(ROOT, 'content', 'ai-tooling-audit.md'), 'utf8');
   const cv = await readFile(path.join(ROOT, 'content', 'cv.md'), 'utf8').catch(() => '');
+  const daily = mdTable(audit, 'Use daily');
+  const adopted = mdTable(audit, 'Just adopted');
+  const skipped = mdTable(audit, 'Evaluated and skipped');
   return {
     'audit-date': audit.match(/^Last audited: (.+)$/m)[1],
-    'audit-daily': auditRows(mdTable(audit, 'Use daily'), 'ctx', false),
-    'audit-adopted': auditRows(mdTable(audit, 'Just adopted'), 'add', true),
-    'audit-skipped': auditRows(mdTable(audit, 'Evaluated and skipped'), 'del', true),
+    'audit-daily': auditRows(daily, 'ctx', false),
+    'audit-adopted': auditRows(adopted, 'add', true),
+    'audit-skipped': auditRows(skipped, 'del', true),
+    // Counts for the docs index, so its receipts cannot drift from the audit.
+    'audit-n-daily': String(daily.length),
+    'audit-n-adopted': String(adopted.length),
+    'audit-n-skipped': String(skipped.length),
     'cv': cv ? folds(commits(marked.parse(cv))) : '',
   };
 }
@@ -369,6 +395,8 @@ async function main() {
     '  Referrer-Policy: strict-origin-when-cross-origin',
     '',
   ].join('\n'));
+  await writeFile(path.join(OUT, '_redirects'),
+    REDIRECTS.flatMap(([from, to]) => [`${from} ${to} 301`, `${from}/ ${to} 301`]).join('\n') + '\n');
 
   // Pass one: render every page body so the nav can carry real counts.
   const values = await generated();
