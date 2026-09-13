@@ -86,7 +86,7 @@ Taught and maintained five courses across six course sections, three in iOS deve
 An individual-contributor role first: hands-on engineering was at least three quarters of the job, with the Tech Lead arc layered on top of it.
 
 - Tech Lead on a 7-person visualization team of senior and staff engineers building real-time LiDAR visualization and control software in C++, C#, and Unity for production autonomous driving hardware, the Iris sensor, while shipping code daily.
-- Progressed from individual contributor to Tech Lead responsible for stakeholder alignment across several automotive OEM engineering teams. Primary technical liaison for Volvo, Toyota, and SAIC, and the contact point for all technical discussion between the visualization team and the larger organization.
+- Progressed from individual contributor to Tech Lead responsible for stakeholder alignment across several global automotive OEM engineering teams. Primary technical liaison for those external teams, and the contact point for all technical discussion between the visualization team and the larger organization.
 - Ran sprint planning, code review, and delivery with a distributed group of engineers and contractors on a hardware-coupled product with no room for latency or instability.
 - Designed and maintained high-performance real-time simulation and visualization software for point cloud and machine learning data supporting LiDAR hardware and autonomous driving software.
 - Optimized Unity rendering for low-latency performance: Job System and Burst, compute and geometry shaders, stencil and depth buffers, render-to-texture, custom frustum construction and slicing, GLSL.
@@ -179,7 +179,7 @@ A two-person studio. Full time for a little over five years, then maintenance an
 <dd><span class="tag">git and LFS</span><span class="tag">Jira</span><span class="tag">Plastic SCM</span><span class="tag">SAFe Agile</span><span class="tag">CMake</span><span class="tag">Conan</span><span class="tag">Docker</span><span class="tag">Jenkins</span><span class="tag">Xcode</span><span class="tag">Figma</span><span class="tag">Database API and schema design</span><span class="tag">Supabase</span><span class="tag">Cloudflare Pages and wrangler</span><span class="tag">UML</span><span class="tag">RESTful APIs</span></dd>
 
 <dt>leadership and communication</dt>
-<dd class="tier">Tech Lead on a 7-person senior and staff engineering team, and led an 8 to 10 person instructor team. Customer-facing technical liaison for Volvo, Toyota, and SAIC. Twelve years explaining hard technical ideas to people who did not already agree.</dd>
+<dd class="tier">Tech Lead on a 7-person senior and staff engineering team, and led an 8 to 10 person instructor team. Customer-facing technical liaison for internal and external engineering teams, including several global automotive OEMs. Twelve years explaining hard technical ideas to people who did not already agree.</dd>
 </dl>
 
 <details class="fold">
