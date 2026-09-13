@@ -25,9 +25,10 @@ const SITE = {
   ogImageAlt: 'A flat illustration of a robot in a beret painting a portrait of a person at an easel captioned "AI-assisted programmer art." The person, holding a coffee, says: What did I tell you about recursion!?',
 };
 
-// The PR state. Open means available. Flip to Merged when the role lands.
+// The PR state. Open to new roles means available. Flip to Merged when the
+// role lands.
 const STATE = {
-  word: 'Open',
+  word: 'Open to new roles',
   line: 'Senior software engineer, Orlando. Remote or hybrid preferred.',
 };
 
