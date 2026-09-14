@@ -595,11 +595,14 @@ details.fold > p:first-of-type { margin-top: 0.4rem; }
 .artifact img { display: block; max-width: 100%; height: auto; border: 1px solid var(--rule); }
 .artifact figcaption { font-family: var(--mono); font-size: 0.75rem; color: var(--ink-2); margin-top: 0.4rem; }
 
-/* The share line under a comic. The permalink is the feature: a page of its
-   own whose card is the drawing, so pasting it anywhere that unfurls a URL
-   shows the comic and not the masthead. The button is revealed by the script
-   and opens the share sheet, or copies the link where there is none. */
-.share { display: block; margin-top: 0.35rem; }
+/* The share block under a comic: the date it went up, then the permalink and
+   the button. The permalink is the feature: a page of its own whose card is
+   the drawing, so pasting it anywhere that unfurls a URL shows the comic and
+   not the masthead. The button is revealed by the script and opens the share
+   sheet, or copies the link where there is none. A blank line sits between
+   the caption and the date, so the machine voice keeps the line to itself. */
+.share { display: block; margin-top: 2em; }
+.share time { display: block; }
 .share a { text-decoration: none; }
 .share a:hover { text-decoration: underline; }
 .share button { font: inherit; color: var(--ink-2); background: none; border: 1px solid var(--rule); padding: 0.1em 0.5em; margin-left: 0.5rem; cursor: pointer; }

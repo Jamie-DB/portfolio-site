@@ -158,7 +158,7 @@ function statSpan(s) {
 // reader has to get through rather than read.
 function nav(current, stats) {
   return NAV.map((n) => {
-    const s = [n.href, ...(n.holds || [])].reduce((t, href) => {
+    const s = [...new Set([n.href, ...(n.holds || [])])].reduce((t, href) => {
       const x = stats[href] || { add: 0, del: 0 };
       return { add: t.add + x.add, del: t.del + x.del };
     }, { add: 0, del: 0 });
@@ -337,21 +337,29 @@ function commits(html) {
 // at /programmer-art/<id>/, whose share card is the drawing rather than the
 // masthead. That page is the share link: paste it anywhere that unfurls a
 // URL and the comic is what shows. The figure on the index and the one on
-// its own page carry the same share line, a permalink and a button the
-// script wires to the share sheet. A page whose front matter names a cover
-// takes that comic's card as its own.
+// its own page carry the same share line: the date it went up, a permalink,
+// and a button the script wires to the share sheet. A page whose front
+// matter names a cover takes that comic's card as its own.
+//
+// The figures are authored newest first, which is the order the index reads
+// in, so the nav row lands on the newest comic and the index is the "all"
+// view behind it. Previous is the older comic and Next the newer one, which
+// leaves the newest with Previous and All, the way an archive's front page
+// only goes backwards.
 //
 // The card is the drawing letterboxed to 1200 by 630, rendered once by
 // scripts/comic-cards.mjs. The build refuses a comic without one.
-const FIGURE = /<figure class="artifact" id="([a-z0-9-]+)" data-title="([^"]*)">\s*<img ([^>]*)>\s*<figcaption>([\s\S]*?)<\/figcaption>\s*<\/figure>/g;
+const FIGURE = /<figure class="artifact" id="([a-z0-9-]+)" data-date="(\d{4}-\d{2}-\d{2})" data-title="([^"]*)">\s*<img ([^>]*)>\s*<figcaption>([\s\S]*?)<\/figcaption>\s*<\/figure>/g;
 const card = (src) => src.replace(/\/comic-/, '/og-comic-');
+// Month, day, year, hyphenated, the way a filename dates a drawing.
+const mdy = (iso) => { const [y, m, d] = iso.split('-'); return `${m}-${d}-${y}`; };
 function comics(page) {
   const attr = (attrs, name) => (attrs.match(new RegExp(`\\b${name}="([^"]*)"`)) || [])[1] || '';
-  const list = [...page.body.matchAll(FIGURE)].map(([html, id, title, img, caption]) => ({
-    html, id, title, img, caption, path: `${page.meta.path}${id}/`, src: attr(img, 'src'), alt: attr(img, 'alt'),
+  const list = [...page.body.matchAll(FIGURE)].map(([html, id, date, title, img, caption]) => ({
+    html, id, date, title, img, caption, path: `${page.meta.path}${id}/`, src: attr(img, 'src'), alt: attr(img, 'alt'),
   }));
   if (!list.length) return [];
-  const figure = (c, eager) => `<figure class="artifact" id="${c.id}">\n  <img ${eager ? c.img.replace(/\s*loading="lazy"/, '') : c.img}>\n  <figcaption>${c.caption}<span class="share" data-title="${esc(c.title)}"><a href="${c.path}">${c.path}</a> <button type="button" hidden>Share</button></span></figcaption>\n</figure>`;
+  const figure = (c, eager) => `<figure class="artifact" id="${c.id}">\n  <img ${eager ? c.img.replace(/\s*loading="lazy"/, '') : c.img}>\n  <figcaption>${c.caption}<span class="share" data-title="${esc(c.title)}"><time datetime="${c.date}">${mdy(c.date)}</time><a href="${c.path}">${c.path}</a> <button type="button" hidden>Share</button></span></figcaption>\n</figure>`;
   for (const c of list) page.body = page.body.replace(c.html, figure(c));
   if (page.meta.cover) {
     const cover = list.find((c) => c.id === page.meta.cover);
@@ -359,12 +367,12 @@ function comics(page) {
     Object.assign(page.meta, { image: card(cover.src), imageAlt: cover.alt });
   }
   return list.map((c, i) => {
-    const prev = list[i - 1];
-    const next = list[i + 1];
+    const prev = list[i + 1];
+    const next = list[i - 1];
     const nav = [
       prev ? `<a href="${prev.path}">Previous</a>` : '',
       next ? `<a href="${next.path}">Next</a>` : '',
-      `<a href="${page.meta.path}">All ${list.length}</a>`,
+      `<a href="${page.meta.path}">All</a>`,
     ].filter(Boolean).join(' ');
     return {
       meta: { title: `${page.meta.title}: ${c.title}`, path: c.path, description: c.caption.replace(/^\/\/\s*/, ''), image: card(c.src), imageAlt: c.alt },
@@ -499,9 +507,13 @@ async function main() {
     for (const p of own) {
       if (!(await exists(path.join(SRC, p.meta.image)))) throw new Error(`${p.meta.path}: no share card at src${p.meta.image}, run scripts/comic-cards.mjs`);
     }
-    // The nav row for the index keeps the current marker on its comics.
+    // The nav row lands on the newest comic rather than the index, and keeps
+    // the current marker on the index and every comic behind it.
     const row = NAV.find((n) => n.href === page.meta.path);
-    if (row) row.holds = own.map((p) => p.meta.path);
+    if (row) {
+      row.holds = [page.meta.path, ...own.map((p) => p.meta.path)];
+      row.href = own[0].meta.path;
+    }
     pages.push(...own);
   }
   for (const page of pages) page.meta.stats = diffstat(page.body);
